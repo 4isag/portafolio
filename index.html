@@ -11,7 +11,6 @@
             --text-main: #ffffff;
             --text-dark: #000000;
             --font-main: 'Inter', Helvetica, sans-serif;
-            /* Curva de animación profesional (más rápida al inicio, suave al final) */
             --transition-main: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -30,29 +29,28 @@
             position: relative;
         }
 
-        /* --- TEXTURA GLOBAL --- */
-        .ruido-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAMklEQVQ4T2N89erVf35+fiZkAOMjR44wgnisGj5qhqlq+KgZpqrhrAYY//v37z8TAgMAO0wYEYK9e7AAAAAASUVORK5CYII=');
-            opacity: 0.6; 
-            pointer-events: none;
-            z-index: 999; 
-            mix-blend-mode: overlay; 
-        }
-
         /* --- BLOQUES CON DISEÑOS DE FONDO --- */
         .bloque-oscuro {
-            background-color: #000;
-            background-image: 
-                radial-gradient(circle at center, #1a1a1a 0%, #000000 100%),
-                repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 1px, transparent 1px, transparent 10px);
-            background-size: 100% 100%, 100% 100%;
-            color: var(--text-main);
+            background-color: #050505;
             position: relative;
+            /* Se eliminó el background-image estático, ahora lo dibuja el Canvas */
+        }
+        
+        /* Aseguramos que todo el contenido esté por encima del canvas de puntos */
+        .bloque-oscuro > *:not(.canvas-puntos) {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Estilo para el lienzo animado */
+        .canvas-puntos {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* Deja que los clicks y hovers pasen a través del canvas */
         }
         
         .bloque-claro {
@@ -79,24 +77,26 @@
         .hero {
             min-height: 100vh;
             display: flex;
-            flex-direction: row; 
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
-            gap: 5vw;
+            gap: 30px; 
             overflow: hidden;
             padding-top: 50px;
+            text-align: center;
         }
 
         .hero-text {
-            flex: 1;
-            max-width: 500px;
-            text-align: left;
+            max-width: 650px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Estilos para el efecto Mask Reveal del texto */
         .linea-oculta {
-            display: block; /* Mantiene la línea en su propio bloque */
-            overflow: hidden; /* Corta todo lo que esté por debajo */
+            display: block; 
+            overflow: hidden; 
         }
 
         .hero h1 {
@@ -109,14 +109,12 @@
             letter-spacing: -2px;
         }
 
-        /* El texto interno arranca movido hacia abajo (invisible) */
         .texto-interno {
             display: inline-block;
             transform: translateY(110%);
             transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Clases de animación iniciales para los subtítulos y botón */
         .fade-arriba {
             opacity: 0;
             transform: translateY(20px);
@@ -129,7 +127,7 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             color: #888;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: block;
         }
 
@@ -143,33 +141,30 @@
         }
 
         .hero-imagen-container {
-            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Imagen con efecto Clip-Path (Barrido) */
         .hero-imagen {
             width: 100%;
-            max-width: 450px;
+            max-width: 220px; 
             aspect-ratio: 1 / 1; 
+            border-radius: 50%; 
             background-image: url('https://images.unsplash.com/photo-1598520106830-8c45c2f35460?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); 
             background-size: cover;
             background-position: center;
             filter: grayscale(100%); 
-            -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-            mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
             
-            /* Arranca cortada desde la izquierda y más grande */
-            clip-path: inset(0 100% 0 0);
-            transform: scale(1.1);
-            transition: clip-path 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(0.8);
+            opacity: 0;
+            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out, filter 0.5s ease, box-shadow 0.5s ease;
         }
         
         .hero-imagen:hover {
             filter: grayscale(0%);
-            transform: scale(1.03) !important; /* El !important sobreescribe la animación inicial */
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.15); 
         }
 
         /* --- BOTONES --- */
@@ -294,10 +289,9 @@
             padding-bottom: 200px;
         }
 
-        /* --- ANIMACIONES DE SCROLL (Más dinámicas y profundas) --- */
+        /* --- ANIMACIONES DE SCROLL --- */
         .animar {
             opacity: 0;
-            /* Agregamos una ligera reducción de escala para dar efecto 3D al aparecer */
             transform: translateY(60px) scale(0.97);
             transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -308,8 +302,7 @@
 
         @media (max-width: 900px) {
             .hero { flex-direction: column; text-align: center; padding-top: 100px; gap: 40px;}
-            .hero-text { text-align: center; order: 2;}
-            .hero-imagen-container { order: 1;}
+            .hero-text { text-align: center; }
             .hero h1 { font-size: 2.8rem; }
             .titulo-seccion { font-size: 2.2rem; }
             .grid-trabajos { grid-template-columns: 1fr; }
@@ -320,15 +313,19 @@
 </head>
 <body>
 
-    <div class="ruido-overlay"></div>
-
     <section class="hero bloque-oscuro">
         
+        <canvas class="canvas-puntos"></canvas>
+
+        <div class="hero-imagen-container">
+            <div class="hero-imagen" id="img-hero"></div>
+        </div>
+
         <div class="hero-text">
             <span class="hero-presentacion fade-arriba" id="txt-pres">Giuliano</span>
             
             <h1>
-                <span class="linea-oculta"><span class="texto-interno" id="titulo-1">Editor</span></span><br>
+                <span class="linea-oculta"><span class="texto-interno" id="titulo-1">Editor</span></span>
                 <span class="linea-oculta"><span class="texto-interno" id="titulo-2">de Video</span></span>
             </h1>
             
@@ -336,10 +333,6 @@
             <div class="fade-arriba" id="btn-hero">
                 <a href="#proyectos" class="btn btn-oscuro">Explorar Proyectos</a>
             </div>
-        </div>
-
-        <div class="hero-imagen-container">
-            <div class="hero-imagen" id="img-hero"></div>
         </div>
 
     </section>
@@ -371,6 +364,9 @@
     </section>
 
     <section class="bloque-oscuro seccion-final">
+        
+        <canvas class="canvas-puntos"></canvas>
+
         <h2 class="titulo-seccion animar" style="text-align: center; margin-bottom: 20px;">Arsenal Técnico</h2>
         <div class="skills-list animar">
             <span class="skill-tag">DaVinci Resolve</span>
@@ -383,7 +379,7 @@
             <h2 class="titulo-seccion animar" style="text-align: center;">¿Hablamos?</h2>
             <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; color: #888; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la postproducción a un estándar profesional, cuéntame sobre tu proyecto.</p>
             <div class="animar">
-                <a href="lopezvillalobosgiuliano@gmail.com" class="btn btn-oscuro">Enviar Mensaje</a>
+                <a href="mailto:tu-correo@gmail.com" class="btn btn-oscuro">Enviar Mensaje</a>
             </div>
         </div>
     </section>
@@ -393,22 +389,20 @@
         if (history.scrollRestoration) {
             history.scrollRestoration = 'manual';
         }
-        // Forzamos llevar al usuario arriba del todo antes de pintar la web
         window.scrollTo(0, 0);
 
         // --- ANIMACIÓN SECUENCIAL DEL HERO AL CARGAR ---
         window.onload = () => {
-            // Aseguramos el scroll a 0 de nuevo por si algún navegador es terco
             setTimeout(() => window.scrollTo(0, 0), 10);
 
-            // 1. Despliegue de la imagen con Clip-Path (Barrido)
+            // 1. Despliegue de la imagen centrada
             setTimeout(() => {
                 const img = document.getElementById('img-hero');
-                img.style.clipPath = 'inset(0 0 0 0)';
+                img.style.opacity = '1';
                 img.style.transform = 'scale(1)';
             }, 100);
 
-            // 2. Revelado del título "Editor de Video" desde la línea base
+            // 2. Revelado del título
             setTimeout(() => {
                 document.getElementById('titulo-1').style.transform = 'translateY(0)';
             }, 300);
@@ -417,7 +411,7 @@
                 document.getElementById('titulo-2').style.transform = 'translateY(0)';
             }, 400);
 
-            // 3. Aparición en cascada del resto de elementos de texto
+            // 3. Aparición en cascada
             setTimeout(() => {
                 const elementosFade = [
                     document.getElementById('txt-pres'),
@@ -429,23 +423,112 @@
                     setTimeout(() => {
                         el.style.opacity = '1';
                         el.style.transform = 'translateY(0)';
-                    }, index * 150); // Cascada de 150ms entre cada elemento
+                    }, index * 150); 
                 });
             }, 600);
         };
 
-        // --- ANIMACIONES DE SCROLL (Para el resto de la página) ---
+        // --- ANIMACIONES DE SCROLL ---
         const observador = new IntersectionObserver((entradas) => {
             entradas.forEach((entrada) => {
                 if (entrada.isIntersecting) {
                     entrada.target.classList.add('visible');
-                    // Opcional: Desconectar luego de ver para que solo anime una vez
-                    // observador.unobserve(entrada.target);
                 }
             });
-        }, { threshold: 0.15 }); // Detona cuando el 15% del elemento es visible
+        }, { threshold: 0.15 });
 
         document.querySelectorAll('.animar').forEach((el) => observador.observe(el));
+
+        // --- EFECTO DE PUNTOS INTERACTIVOS (CANVAS) ---
+        class EfectoPuntos {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.parent = canvas.parentElement;
+                this.dots = [];
+                this.spacing = 26; // Separación entre puntos
+                this.mouse = { x: -1000, y: -1000 };
+                this.hoverRadius = 140; // Radio del brillo del mouse
+                
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                
+                this.parent.addEventListener('mousemove', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.mouse.x = e.clientX - rect.left;
+                    this.mouse.y = e.clientY - rect.top;
+                });
+                
+                this.parent.addEventListener('mouseleave', () => {
+                    this.mouse.x = -1000;
+                    this.mouse.y = -1000;
+                });
+
+                this.animar = this.animar.bind(this);
+                requestAnimationFrame(this.animar);
+            }
+
+            resize() {
+                this.canvas.width = this.parent.offsetWidth;
+                this.canvas.height = this.parent.offsetHeight;
+                this.crearPuntos();
+            }
+
+            crearPuntos() {
+                this.dots = [];
+                for (let x = this.spacing / 2; x < this.canvas.width; x += this.spacing) {
+                    for (let y = this.spacing / 2; y < this.canvas.height; y += this.spacing) {
+                        this.dots.push({
+                            x: x,
+                            y: y,
+                            baseAlpha: 0.02 + Math.random() * 0.05, // Transparencia aleatoria suave
+                            fase: Math.random() * Math.PI * 2, // Desfase para que titilen asincrónicamente
+                            velocidadTitileo: 0.005 + Math.random() * 0.01 // Velocidad del parpadeo
+                        });
+                    }
+                }
+            }
+
+            animar() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.dots.forEach(dot => {
+                    dot.fase += dot.velocidadTitileo;
+                    
+                    // Titileo base usando función seno
+                    let alpha = dot.baseAlpha + (Math.sin(dot.fase) * 0.03); 
+                    let radio = 1; // Tamaño base del punto
+
+                    // Cálculo de distancia al mouse para el brillo
+                    let dx = this.mouse.x - dot.x;
+                    let dy = this.mouse.y - dot.y;
+                    let distancia = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distancia < this.hoverRadius) {
+                        // Intensidad del brillo basada en qué tan cerca está el mouse
+                        let intensidad = 1 - (distancia / this.hoverRadius);
+                        // Curva de aceleración (ease) para que el brillo sea más suave en los bordes
+                        intensidad = intensidad * intensidad; 
+                        
+                        alpha += intensidad * 0.7; // Suma opacidad
+                        radio += intensidad * 1.2; // Crece ligerísimamente el tamaño
+                    }
+
+                    // Prevenir valores fuera de rango
+                    alpha = Math.max(0, Math.min(1, alpha));
+
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                    this.ctx.beginPath();
+                    this.ctx.arc(dot.x, dot.y, radio, 0, Math.PI * 2);
+                    this.ctx.fill();
+                });
+
+                requestAnimationFrame(this.animar);
+            }
+        }
+
+        // Inicializamos el script en todos los canvas con la clase correspondiente
+        document.querySelectorAll('.canvas-puntos').forEach(canvas => new EfectoPuntos(canvas));
     </script>
 
 </body>
