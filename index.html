@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giuliano | Editor de Video Premium</title>
+    <style>
+        /* --- VARIABLES Y RESET --- */
+        :root {
+            --neon-glow-subtle: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;
+            --text-dark: #000000;
+            --font-main: 'Inter', Helvetica, sans-serif;
+            /* Curva de animación profesional (más rápida al inicio, suave al final) */
+            --transition-main: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #000;
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- TEXTURA GLOBAL --- */
+        .ruido-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAMklEQVQ4T2N89erVf35+fiZkAOMjR44wgnisGj5qhqlq+KgZpqrhrAYY//v37z8TAgMAO0wYEYK9e7AAAAAASUVORK5CYII=');
+            opacity: 0.6; 
+            pointer-events: none;
+            z-index: 999; 
+            mix-blend-mode: overlay; 
+        }
+
+        /* --- BLOQUES CON DISEÑOS DE FONDO --- */
+        .bloque-oscuro {
+            background-color: #000;
+            background-image: 
+                radial-gradient(circle at center, #1a1a1a 0%, #000000 100%),
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 1px, transparent 1px, transparent 10px);
+            background-size: 100% 100%, 100% 100%;
+            color: var(--text-main);
+            position: relative;
+        }
+        
+        .bloque-claro {
+            background-color: #fff;
+            background-image: 
+                linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%), 
+                linear-gradient(-45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.02) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.02) 75%);
+            background-size: 40px 40px;
+            color: var(--text-dark);
+            position: relative;
+            box-shadow: inset 0 20px 50px rgba(0,0,0,0.1); 
+        }
+
+        section {
+            padding: 120px 5vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- 2. HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row; 
+            justify-content: center;
+            align-items: center;
+            gap: 5vw;
+            overflow: hidden;
+            padding-top: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        /* Estilos para el efecto Mask Reveal del texto */
+        .linea-oculta {
+            display: block; /* Mantiene la línea en su propio bloque */
+            overflow: hidden; /* Corta todo lo que esté por debajo */
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            color: #fff;
+            letter-spacing: -2px;
+        }
+
+        /* El texto interno arranca movido hacia abajo (invisible) */
+        .texto-interno {
+            display: inline-block;
+            transform: translateY(110%);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Clases de animación iniciales para los subtítulos y botón */
+        .fade-arriba {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        
+        .hero-presentacion {
+            font-size: 1rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #888;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            color: #bbb;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        .hero-imagen-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Imagen con efecto Clip-Path (Barrido) */
+        .hero-imagen {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1 / 1; 
+            background-image: url('https://images.unsplash.com/photo-1598520106830-8c45c2f35460?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); 
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%); 
+            -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+            mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+            
+            /* Arranca cortada desde la izquierda y más grande */
+            clip-path: inset(0 100% 0 0);
+            transform: scale(1.1);
+            transition: clip-path 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .hero-imagen:hover {
+            filter: grayscale(0%);
+            transform: scale(1.03) !important; /* El !important sobreescribe la animación inicial */
+        }
+
+        /* --- BOTONES --- */
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .btn-oscuro {
+            color: #000;
+            background-color: #fff;
+            border: 1px solid #fff;
+        }
+        .btn-oscuro:hover {
+            background-color: transparent;
+            color: #fff;
+            box-shadow: 0 0 15px var(--neon-glow-subtle); 
+        }
+
+        /* --- 3. BLOQUE CLARO: PORTAFOLIO --- */
+        .titulo-seccion {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 70px;
+            width: 100%;
+            max-width: 1100px;
+            text-align: left;
+            letter-spacing: -1px;
+        }
+
+        .grid-trabajos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 50px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .trabajo-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+            overflow: hidden;
+            margin-bottom: 25px;
+            transition: all 0.4s ease;
+            border: 2px solid #000;
+            box-shadow: 15px 15px 0px #000; 
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(0%); 
+        }
+
+        .video-container:hover {
+            transform: translate(-5px, -5px); 
+            box-shadow: 20px 20px 0px #000; 
+        }
+
+        .trabajo-info h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        .trabajo-info p {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        /* --- 4. HABILIDADES Y CONTACTO --- */
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 800px;
+            margin-top: 50px;
+        }
+
+        .skill-tag {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            padding: 12px 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+        }
+        .skill-tag:hover {
+            border-color: #fff;
+            color: #fff;
+            background-color: rgba(255,255,255,0.05);
+            box-shadow: 0 0 10px var(--neon-glow-subtle);
+        }
+
+        .seccion-final {
+            text-align: center;
+            padding-bottom: 200px;
+        }
+
+        /* --- ANIMACIONES DE SCROLL (Más dinámicas y profundas) --- */
+        .animar {
+            opacity: 0;
+            /* Agregamos una ligera reducción de escala para dar efecto 3D al aparecer */
+            transform: translateY(60px) scale(0.97);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animar.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        @media (max-width: 900px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 100px; gap: 40px;}
+            .hero-text { text-align: center; order: 2;}
+            .hero-imagen-container { order: 1;}
+            .hero h1 { font-size: 2.8rem; }
+            .titulo-seccion { font-size: 2.2rem; }
+            .grid-trabajos { grid-template-columns: 1fr; }
+            .video-container { box-shadow: 10px 10px 0px #000; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="ruido-overlay"></div>
+
+    <section class="hero bloque-oscuro">
+        
+        <div class="hero-text">
+            <span class="hero-presentacion fade-arriba" id="txt-pres">Giuliano</span>
+            
+            <h1>
+                <span class="linea-oculta"><span class="texto-interno" id="titulo-1">Editor</span></span><br>
+                <span class="linea-oculta"><span class="texto-interno" id="titulo-2">de Video</span></span>
+            </h1>
+            
+            <p class="hero-subtitle fade-arriba" id="txt-sub">Elevo tu contenido con montaje dinámico, diseño sonoro integral y color grading profesional.</p>
+            <div class="fade-arriba" id="btn-hero">
+                <a href="#proyectos" class="btn btn-oscuro">Explorar Proyectos</a>
+            </div>
+        </div>
+
+        <div class="hero-imagen-container">
+            <div class="hero-imagen" id="img-hero"></div>
+        </div>
+
+    </section>
+
+    <section id="proyectos" class="bloque-claro">
+        <h2 class="titulo-seccion animar">Casos de Éxito</h2>
+        
+        <div class="grid-trabajos">
+            <div class="trabajo-item animar">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" allowfullscreen></iframe>
+                </div>
+                <div class="trabajo-info">
+                    <h3>Proyecto de Egreso Universitario</h3>
+                    <p>Postproducción Integral | Color | Sonido | VFX</p>
+                </div>
+            </div>
+
+            <div class="trabajo-item animar">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" allowfullscreen></iframe>
+                </div>
+                <div class="trabajo-info">
+                    <h3>Montaje Dinámico para Creadores</h3>
+                    <p>Retención | Cortes de Ritmo | Motion Graphics</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bloque-oscuro seccion-final">
+        <h2 class="titulo-seccion animar" style="text-align: center; margin-bottom: 20px;">Arsenal Técnico</h2>
+        <div class="skills-list animar">
+            <span class="skill-tag">DaVinci Resolve</span>
+            <span class="skill-tag">Blender</span>
+            <span class="skill-tag">FL Studio</span>
+            <span class="skill-tag">Reaper</span>
+        </div>
+        
+        <div style="margin-top: 100px;">
+            <h2 class="titulo-seccion animar" style="text-align: center;">¿Hablamos?</h2>
+            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; color: #888; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la postproducción a un estándar profesional, cuéntame sobre tu proyecto.</p>
+            <div class="animar">
+                <a href="lopezvillalobosgiuliano@gmail.com" class="btn btn-oscuro">Enviar Mensaje</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- PREVENCIÓN DEL SALTO DE SCROLL AL RECARGAR ---
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+        }
+        // Forzamos llevar al usuario arriba del todo antes de pintar la web
+        window.scrollTo(0, 0);
+
+        // --- ANIMACIÓN SECUENCIAL DEL HERO AL CARGAR ---
+        window.onload = () => {
+            // Aseguramos el scroll a 0 de nuevo por si algún navegador es terco
+            setTimeout(() => window.scrollTo(0, 0), 10);
+
+            // 1. Despliegue de la imagen con Clip-Path (Barrido)
+            setTimeout(() => {
+                const img = document.getElementById('img-hero');
+                img.style.clipPath = 'inset(0 0 0 0)';
+                img.style.transform = 'scale(1)';
+            }, 100);
+
+            // 2. Revelado del título "Editor de Video" desde la línea base
+            setTimeout(() => {
+                document.getElementById('titulo-1').style.transform = 'translateY(0)';
+            }, 300);
+            
+            setTimeout(() => {
+                document.getElementById('titulo-2').style.transform = 'translateY(0)';
+            }, 400);
+
+            // 3. Aparición en cascada del resto de elementos de texto
+            setTimeout(() => {
+                const elementosFade = [
+                    document.getElementById('txt-pres'),
+                    document.getElementById('txt-sub'),
+                    document.getElementById('btn-hero')
+                ];
+                
+                elementosFade.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, index * 150); // Cascada de 150ms entre cada elemento
+                });
+            }, 600);
+        };
+
+        // --- ANIMACIONES DE SCROLL (Para el resto de la página) ---
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                if (entrada.isIntersecting) {
+                    entrada.target.classList.add('visible');
+                    // Opcional: Desconectar luego de ver para que solo anime una vez
+                    // observador.unobserve(entrada.target);
+                }
+            });
+        }, { threshold: 0.15 }); // Detona cuando el 15% del elemento es visible
+
+        document.querySelectorAll('.animar').forEach((el) => observador.observe(el));
+    </script>
+
+</body>
+</html>
