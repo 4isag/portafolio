@@ -64,11 +64,15 @@
             box-shadow: inset 0 20px 50px rgba(0,0,0,0.1); 
         }
 
+        /* CONFIGURACIÓN MAESTRA DE BLOQUES (SIMETRÍA) */
         section {
-            padding: 120px 5vw;
+            padding: 10vh 5vw; /* Padding dinámico basado en la altura de la pantalla */
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Centrado vertical perfecto */
+            min-height: 100vh; /* Ocupa exactamente toda la pantalla */
+            width: 100%;
         }
 
         .titulo-seccion {
@@ -78,23 +82,13 @@
             margin-bottom: 70px;
             width: 100%;
             max-width: 1100px;
-            text-align: center; /* Cambiado de left a center */
+            text-align: center; 
+            margin-left: auto;
+            margin-right: auto;
             letter-spacing: -1px;
         }
 
         /* --- 1. HERO (NEGRO) --- */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column; 
-            justify-content: center;
-            align-items: center;
-            gap: 30px; 
-            overflow: hidden;
-            padding-top: 50px;
-            text-align: center;
-        }
-
         .hero-text {
             max-width: 650px;
             text-align: center;
@@ -153,6 +147,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-bottom: 30px;
         }
 
         .hero-imagen {
@@ -185,6 +180,7 @@
             text-decoration: none;
             transition: all 0.4s ease;
             position: relative;
+            cursor: pointer;
         }
 
         .btn-oscuro {
@@ -210,11 +206,6 @@
         }
 
         /* --- 2. DEMO REEL (BLANCO) --- */
-        .reel-section {
-            justify-content: center;
-            min-height: 80vh;
-        }
-
         .reel-container {
             width: 100%;
             max-width: 1000px;
@@ -254,7 +245,7 @@
             gap: 50px;
             width: 100%;
             max-width: 1100px;
-            text-align: left; /* Mantiene el texto de los videos a la izquierda */
+            text-align: left;
         }
 
         .trabajo-item {
@@ -281,7 +272,6 @@
             width: 100%;
             height: 100%;
             border: none;
-            filter: grayscale(0%); 
         }
 
         .video-container:hover {
@@ -307,7 +297,6 @@
         /* --- 4. HABILIDADES Y CONTACTO (BLANCO) --- */
         .seccion-final {
             text-align: center;
-            padding-bottom: 120px;
         }
 
         .skills-list {
@@ -382,19 +371,19 @@
         }
 
         @media (max-width: 900px) {
-            .hero { flex-direction: column; text-align: center; padding-top: 100px; gap: 40px;}
             .hero-text { text-align: center; }
             .hero h1 { font-size: 2.8rem; }
-            .titulo-seccion { font-size: 2.2rem; }
+            .titulo-seccion { font-size: 2.2rem; margin-bottom: 40px; }
             .grid-trabajos { grid-template-columns: 1fr; }
             .reel-wrapper, .video-container { box-shadow: 10px 10px 0px currentColor; }
+            section { padding: 10vh 8vw; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <section class="hero bloque-oscuro">
+    <section class="bloque-oscuro">
         
         <canvas class="canvas-puntos"></canvas>
 
@@ -418,13 +407,13 @@
 
     </section>
 
-    <section id="reel" class="bloque-claro reel-section">
+    <section id="reel" class="bloque-claro">
         
         <h2 class="titulo-seccion animar">Demo Reel</h2>
 
         <div class="reel-container animar">
             <div class="reel-wrapper">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" allowfullscreen></iframe>
+                <iframe id="reel-video" src="https://www.youtube.com/embed/Da_sa7Zfu10?rel=0&enablejsapi=1" allowfullscreen></iframe>
             </div>
         </div>
 
@@ -473,7 +462,7 @@
             <h2 class="titulo-seccion animar">¿Hablamos?</h2>
             <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; color: #555; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la postproducción a un estándar profesional, cuéntame sobre tu proyecto.</p>
             <div class="animar">
-                <a href="mailto:tu-correo@gmail.com" class="btn btn-claro">Enviar Mensaje</a>
+                <a href="mailto:giuliano.audiovisual@gmail.com" class="btn btn-claro">Enviar Mensaje</a>
             </div>
 
             <div class="redes-sociales animar">
@@ -531,7 +520,7 @@
             }, 600);
         };
 
-        // --- ANIMACIONES DE SCROLL. ---
+        // --- ANIMACIONES DE SCROLL BASE ---
         const observador = new IntersectionObserver((entradas) => {
             entradas.forEach((entrada) => {
                 if (entrada.isIntersecting) {
@@ -626,6 +615,38 @@
         }
 
         document.querySelectorAll('.canvas-puntos').forEach(canvas => new EfectoPuntos(canvas));
+
+        // --- YOUTUBE API PARA AUTOPLAY Y VOLUMEN ---
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var playerReel;
+        function onYouTubeIframeAPIReady() {
+            playerReel = new YT.Player('reel-video', {
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.setVolume(20);
+            event.target.setPlaybackQuality('hd1080');
+
+            const videoObserver = new IntersectionObserver((entradas) => {
+                entradas.forEach(entrada => {
+                    if (entrada.isIntersecting) {
+                        event.target.playVideo();
+                    } else {
+                        event.target.pauseVideo();
+                    }
+                });
+            }, { threshold: 0.5 }); 
+
+            videoObserver.observe(document.getElementById('reel'));
+        }
     </script>
 
 </body>
