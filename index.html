@@ -64,7 +64,7 @@
             box-shadow: inset 0 20px 50px rgba(0,0,0,0.1); 
         }
 
-        /* CONFIGURACIÓN MAESTRA DE BLOQUES (SIMETRÍA) */
+        /* CONFIGURACIÓN MAESTRA DE BLOQUES */
         section {
             padding: 10vh 5vw;
             display: flex;
@@ -238,11 +238,11 @@
         }
 
 
-        /* --- 3. PORTAFOLIO / PROYECTOS (NEGRO) --- */
+        /* --- 3. PORTAFOLIO / YOUTUBE (NEGRO) --- */
         .grid-trabajos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px; 
             width: 100%;
             max-width: 1100px;
             text-align: left;
@@ -293,8 +293,140 @@
             letter-spacing: 1px;
         }
 
+        /* --- 4. FORMATOS VERTICALES (CARRUSEL - BLANCO) --- */
+        .carrusel-vertical-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 600px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px; 
+            overflow: visible;
+        }
 
-        /* --- 4. HABILIDADES Y CONTACTO (BLANCO) --- */
+        .carrusel-track {
+            position: relative;
+            width: 300px; 
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carrusel-item {
+            position: absolute;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            z-index: 0;
+            pointer-events: none; 
+        }
+
+        .carrusel-item.activo {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+            z-index: 3;
+            pointer-events: auto; 
+        }
+
+        .carrusel-item.siguiente {
+            transform: translateX(80%) scale(0.8) translateZ(-100px);
+            opacity: 0.4;
+            z-index: 2;
+            cursor: pointer;
+            pointer-events: auto; 
+        }
+
+        .carrusel-item.anterior {
+            transform: translateX(-80%) scale(0.8) translateZ(-100px);
+            opacity: 0.4;
+            z-index: 2;
+            cursor: pointer;
+            pointer-events: auto; 
+        }
+
+        /* Soporte añadido para la etiqueta video en el carrusel inactivo */
+        .carrusel-item:not(.activo) iframe,
+        .carrusel-item:not(.activo) video {
+            pointer-events: none;
+        }
+
+        .video-vertical-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16; 
+            background-color: #000;
+            overflow: hidden;
+            margin-bottom: 25px;
+            border: 2px solid #000; 
+            box-shadow: 15px 15px 0px #000;
+            transition: all 0.4s ease;
+        }
+
+        /* Soporte añadido para la etiqueta video */
+        .video-vertical-container iframe,
+        .video-vertical-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            object-fit: cover; /* Asegura que el video llene todo el marco */
+        }
+
+        .carrusel-btn {
+            position: absolute;
+            top: 40%;
+            transform: translateY(-50%);
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 5px 5px 0px #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carrusel-btn:hover {
+            background: #000;
+            color: #fff;
+            box-shadow: 0px 0px 0px transparent;
+            transform: translateY(-45%);
+        }
+
+        .carrusel-btn.prev { left: 10%; }
+        .carrusel-btn.next { right: 10%; }
+
+        .trabajo-info-claro { text-align: left; }
+        .trabajo-info-claro h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-dark); 
+        }
+        .trabajo-info-claro p {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+
+        /* --- 5. HABILIDADES Y CONTACTO (NEGRO) --- */
         .seccion-final {
             text-align: center;
         }
@@ -308,24 +440,23 @@
             margin-top: 50px;
         }
 
-        .skill-tag-claro {
+        .skill-tag {
             font-size: 1rem;
             font-weight: 600;
-            color: rgba(0,0,0,0.7);
+            color: rgba(255,255,255,0.7);
             padding: 12px 25px;
-            border: 1px solid rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.4s ease;
         }
-        .skill-tag-claro:hover {
-            border-color: #000;
-            color: #000;
-            background-color: rgba(0,0,0,0.05);
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        .skill-tag:hover {
+            border-color: #fff;
+            color: #fff;
+            background-color: rgba(255,255,255,0.05);
+            box-shadow: 0 0 10px var(--neon-glow-subtle);
         }
 
-        /* --- REDES SOCIALES --- */
         .redes-sociales {
             display: flex;
             justify-content: center;
@@ -340,8 +471,8 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            border: 2px solid #000;
-            color: #000;
+            border: 2px solid #fff; 
+            color: #fff; 
             text-decoration: none;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -353,10 +484,10 @@
         }
 
         .redes-sociales a:hover {
-            background-color: #000;
-            color: #fff;
+            background-color: #fff;
+            color: #000; 
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 20px rgba(255,255,255,0.15);
         }
 
         /* --- ANIMACIONES DE SCROLL --- */
@@ -374,9 +505,14 @@
             .hero-text { text-align: center; }
             .hero h1 { font-size: 2.8rem; }
             .titulo-seccion { font-size: 2.2rem; margin-bottom: 40px; }
-            .grid-trabajos { grid-template-columns: 1fr; }
-            .reel-wrapper, .video-container { box-shadow: 10px 10px 0px currentColor; }
+            .grid-trabajos { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+            .reel-wrapper, .video-container, .video-vertical-container { box-shadow: 10px 10px 0px currentColor; }
             section { padding: 10vh 8vw; }
+            
+            .carrusel-item.siguiente { transform: translateX(65%) scale(0.85); }
+            .carrusel-item.anterior { transform: translateX(-65%) scale(0.85); }
+            .carrusel-btn.prev { left: 0; }
+            .carrusel-btn.next { right: 0; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -384,90 +520,122 @@
 <body>
 
     <section class="bloque-oscuro">
-        
         <canvas class="canvas-puntos"></canvas>
-
         <div class="hero-imagen-container">
             <img src="https://media.licdn.com/dms/image/v2/D4D03AQEL1rqH3PsMag/profile-displayphoto-scale_400_400/B4DZ0ZztkTKgAg-/0/1774254480691?e=1776297600&v=beta&t=Suzbm43FN4SH61v4Qg4kFQeFQ3Q4pVaeTfC-eIGyFFw" alt="Foto de Perfil" class="hero-imagen" id="img-hero">
         </div>
-
         <div class="hero-text">
             <span class="hero-presentacion fade-arriba" id="txt-pres">¡Hola, soy Giuliano!</span>
-            
             <h1>
                 <span class="linea-oculta"><span class="texto-interno" id="titulo-1">POSTPRODUCTOR</span></span>
                 <span class="linea-oculta"><span class="texto-interno" id="titulo-2">AUDIOVISUAL</span></span>
             </h1>
-            
             <p class="hero-subtitle fade-arriba" id="txt-sub">Editor de video enfocado en creadores de contenido. Tú ofreces la idea y yo la hago realidad.</p>
             <div class="fade-arriba" id="btn-hero">
                 <a href="#reel" class="btn btn-oscuro" onclick="prepararVideo()">Ver mi trabajo</a>
             </div>
         </div>
-
     </section>
 
     <section id="reel" class="bloque-claro">
-        
         <h2 class="titulo-seccion animar">Demo Reel</h2>
-
         <div class="reel-container animar">
             <div class="reel-wrapper">
-                <iframe id="reel-video" 
-                        src="https://www.youtube.com/embed/Da_sa7Zfu10?rel=0&enablejsapi=1&autoplay=1&mute=1" 
-                        allow="autoplay; encrypted-media" 
-                        allowfullscreen></iframe>
+                <iframe id="reel-video" src="https://www.youtube.com/embed/Da_sa7Zfu10?rel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
-
     </section>
 
     <section id="proyectos" class="bloque-oscuro">
-        
         <canvas class="canvas-puntos"></canvas>
-
-        <h2 class="titulo-seccion animar">Casos de Éxito</h2>
-        
+        <h2 class="titulo-seccion animar">Contenido para Youtube</h2>
         <div class="grid-trabajos">
             <div class="trabajo-item animar">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/s0aTdQXtPkw?si=kyBD9tJthFV4p7vj" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
                     <h3>Proyecto de Egreso Universitario</h3>
                     <p>Postproducción Integral | Color | Sonido | VFX</p>
                 </div>
             </div>
-
             <div class="trabajo-item animar">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/QflkDmKh-lw?si=621f7B2gjR4BrHLs" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
                     <h3>Montaje Dinámico para Creadores</h3>
                     <p>Retención | Cortes de Ritmo | Motion Graphics</p>
                 </div>
             </div>
+            <div class="trabajo-item animar">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/a-jmu_ThYjI?si=PvSaUZKe8lV7QegL" allowfullscreen></iframe>
+                </div>
+                <div class="trabajo-info">
+                    <h3>Highlights de Gaming</h3>
+                    <p>Ritmo Frenético | Memes | Tracking de Textos</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="bloque-claro seccion-final">
-        
+    <section id="verticales" class="bloque-claro">
+        <h2 class="titulo-seccion animar">TikToks, Reels y Shorts</h2>
+        <div class="carrusel-vertical-wrapper animar">
+            <button class="carrusel-btn prev" onclick="moverCarrusel(-1)">&#10094;</button>
+            <div class="carrusel-track" id="track-vertical">
+                
+                <div class="carrusel-item activo">
+                    <div class="video-vertical-container">
+                        <video src="ruta_a_tu_video_1.mp4" loop muted playsinline controls></video>
+                    </div>
+                    <div class="trabajo-info-claro">
+                        <h3>Micro-Documental</h3>
+                        <p>Subtítulos Dinámicos | Sound Design</p>
+                    </div>
+                </div>
+                
+                <div class="carrusel-item siguiente">
+                    <div class="video-vertical-container">
+                        <video src="ruta_a_tu_video_2.mp4" loop muted playsinline controls></video>
+                    </div>
+                    <div class="trabajo-info-claro">
+                        <h3>Clip de Podcast</h3>
+                        <p>Cambio de Cámaras | Retención Activa</p>
+                    </div>
+                </div>
+                
+                <div class="carrusel-item anterior">
+                    <div class="video-vertical-container">
+                        <video src="ruta_a_tu_video_3.mp4" loop muted playsinline controls></video>
+                    </div>
+                    <div class="trabajo-info-claro">
+                        <h3>Gameplay Viral</h3>
+                        <p>Efectos Visuales | Pacing Rápido</p>
+                    </div>
+                </div>
+                
+            </div>
+            <button class="carrusel-btn next" onclick="moverCarrusel(1)">&#10095;</button>
+        </div>
+    </section>
+
+    <section class="bloque-oscuro seccion-final">
+        <canvas class="canvas-puntos"></canvas>
         <h2 class="titulo-seccion animar" style="margin-bottom: 20px;">Arsenal Técnico</h2>
         <div class="skills-list animar">
-            <span class="skill-tag-claro">DaVinci Resolve</span>
-            <span class="skill-tag-claro">Blender</span>
-            <span class="skill-tag-claro">FL Studio</span>
-            <span class="skill-tag-claro">Reaper</span>
+            <span class="skill-tag">DaVinci Resolve</span>
+            <span class="skill-tag">Blender</span>
+            <span class="skill-tag">FL Studio</span>
+            <span class="skill-tag">Reaper</span>
         </div>
-        
         <div style="margin-top: 100px; width: 100%;">
             <h2 class="titulo-seccion animar">¿Hablamos?</h2>
-            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; color: #555; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la postproducción a un estándar profesional, cuéntame sobre tu proyecto.</p>
+            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; color: #bbb; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la postproducción a un estándar profesional, cuéntame sobre tu proyecto.</p>
             <div class="animar">
-                <a href="mailto:giuliano.audiovisual@gmail.com" class="btn btn-claro">Enviar Mensaje</a>
+                <a href="mailto:giuliano.audiovisual@gmail.com" class="btn btn-oscuro">Enviar Mensaje</a>
             </div>
-
             <div class="redes-sociales animar">
                 <a href="https://www.instagram.com/giulianolopez.av/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                     <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -483,13 +651,11 @@
     </section>
 
     <script>
-        // --- PREVENCIÓN DEL SALTO DE SCROLL AL RECARGAR ---
-        if (history.scrollRestoration) {
-            history.scrollRestoration = 'manual';
-        }
+        // --- PREVENCIÓN DEL SALTO DE SCROLL ---
+        if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
         window.scrollTo(0, 0);
 
-        // --- ANIMACIÓN SECUENCIAL DEL HERO AL CARGAR ---
+        // --- ANIMACIÓN HERO ---
         window.onload = () => {
             setTimeout(() => window.scrollTo(0, 0), 10);
             setTimeout(() => {
@@ -499,28 +665,20 @@
             setTimeout(() => { document.getElementById('titulo-1').style.transform = 'translateY(0)'; }, 300);
             setTimeout(() => { document.getElementById('titulo-2').style.transform = 'translateY(0)'; }, 400);
             setTimeout(() => {
-                const elementosFade = [
-                    document.getElementById('txt-pres'),
-                    document.getElementById('txt-sub'),
-                    document.getElementById('btn-hero')
-                ];
+                const elementosFade = [document.getElementById('txt-pres'), document.getElementById('txt-sub'), document.getElementById('btn-hero')];
                 elementosFade.forEach((el, index) => {
-                    setTimeout(() => {
-                        if(el){ el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }
-                    }, index * 150); 
+                    setTimeout(() => { if(el){ el.style.opacity = '1'; el.style.transform = 'translateY(0)'; } }, index * 150); 
                 });
             }, 600);
         };
 
-        // --- ANIMACIONES DE SCROLL BASE ---
+        // --- INTERSECTION OBSERVER ---
         const observador = new IntersectionObserver((entradas) => {
-            entradas.forEach((entrada) => {
-                if (entrada.isIntersecting) { entrada.target.classList.add('visible'); }
-            });
+            entradas.forEach((entrada) => { if (entrada.isIntersecting) { entrada.target.classList.add('visible'); } });
         }, { threshold: 0.15 });
         document.querySelectorAll('.animar').forEach((el) => observador.observe(el));
 
-        // --- EFECTO DE PUNTOS INTERACTIVOS (CANVAS) ---
+        // --- CANVAS PUNTOS ---
         class EfectoPuntos {
             constructor(canvas) {
                 this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.parent = canvas.parentElement;
@@ -561,51 +719,65 @@
         }
         document.querySelectorAll('.canvas-puntos').forEach(canvas => new EfectoPuntos(canvas));
 
-        // --- YOUTUBE API PARA AUTOPLAY Y VOLUMEN ---
+        // --- LÓGICA CARRUSEL (NATIVO) ---
+        const track = document.getElementById('track-vertical');
+        const items = Array.from(track.children);
+        let currentIndex = 0;
+
+        function actualizarCarrusel() {
+            items.forEach((item, index) => {
+                item.classList.remove('activo', 'siguiente', 'anterior');
+                const video = item.querySelector('video'); // Busca el video dentro del item
+                
+                if (index === currentIndex) { 
+                    item.classList.add('activo'); 
+                    if(video) video.play().catch(e => {}); // Reproduce automáticamente al centrar
+                } else {
+                    if (index === (currentIndex + 1) % items.length) { 
+                        item.classList.add('siguiente'); 
+                    } else if (index === (currentIndex - 1 + items.length) % items.length) { 
+                        item.classList.add('anterior'); 
+                    }
+                    if(video) {
+                        video.pause(); // Pausa los videos que no están en el centro
+                        video.currentTime = 0; // Opcional: reinicia el video al quitarlo del centro
+                    }
+                }
+            });
+        }
+
+        function moverCarrusel(direccion) {
+            currentIndex = (currentIndex + direccion + items.length) % items.length;
+            actualizarCarrusel();
+        }
+
+        items.forEach((item) => {
+            item.addEventListener('click', () => {
+                if (item.classList.contains('siguiente')) moverCarrusel(1);
+                else if (item.classList.contains('anterior')) moverCarrusel(-1);
+            });
+        });
+
+        // --- YOUTUBE API ---
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
         var playerReel;
         var interactionUnlocked = false;
-
-        function onYouTubeIframeAPIReady() {
-            playerReel = new YT.Player('reel-video', {
-                events: { 'onReady': onPlayerReady }
-            });
+        function onYouTubeIframeAPIReady() { playerReel = new YT.Player('reel-video', { events: { 'onReady': onPlayerReady } }); }
+        function prepararVideo() { 
+            interactionUnlocked = true; 
+            if(playerReel && typeof playerReel.playVideo === 'function') { playerReel.playVideo(); playerReel.setVolume(15); } 
         }
-
-        function prepararVideo() {
-            interactionUnlocked = true;
-            if(playerReel && typeof playerReel.playVideo === 'function') {
-                playerReel.playVideo();
-                playerReel.setVolume(15);
-            }
-        }
-
         function onPlayerReady(event) {
             event.target.setVolume(15);
-            event.target.setPlaybackQuality('hd1080');
-
             const videoObserver = new IntersectionObserver((entradas) => {
                 entradas.forEach(entrada => {
-                    if (entrada.isIntersecting) {
-                        // Si el usuario ya interactuó, reproducimos con sonido
-                        if(interactionUnlocked) {
-                            event.target.unMute();
-                            event.target.setVolume(15);
-                        } else {
-                            // Si no, iniciamos en mute para cumplir políticas del navegador
-                            event.target.mute();
-                        }
-                        event.target.playVideo();
-                    } else {
-                        event.target.pauseVideo();
-                    }
+                    if (entrada.isIntersecting) { if(interactionUnlocked) event.target.unMute(); else event.target.mute(); event.target.playVideo(); } 
+                    else { event.target.pauseVideo(); }
                 });
             }, { threshold: 0.3 }); 
-
             videoObserver.observe(document.getElementById('reel'));
         }
     </script>
