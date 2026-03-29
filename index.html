@@ -349,8 +349,7 @@
             pointer-events: auto; 
         }
 
-        /* Soporte añadido para la etiqueta video en el carrusel inactivo */
-        .carrusel-item:not(.activo) iframe,
+        /* Bloquea interacciones en videos inactivos */
         .carrusel-item:not(.activo) video {
             pointer-events: none;
         }
@@ -367,8 +366,7 @@
             transition: all 0.4s ease;
         }
 
-        /* Soporte añadido para la etiqueta video */
-        .video-vertical-container iframe,
+        /* --- ESTILO AÑADIDO PARA LA ETIQUETA VIDEO --- */
         .video-vertical-container video {
             position: absolute;
             top: 0;
@@ -376,7 +374,7 @@
             width: 100%;
             height: 100%;
             border: none;
-            object-fit: cover; /* Asegura que el video llene todo el marco */
+            object-fit: cover;
         }
 
         .carrusel-btn {
@@ -588,7 +586,7 @@
                 
                 <div class="carrusel-item activo">
                     <div class="video-vertical-container">
-                        <video src="ruta_a_tu_video_1.mp4" loop muted playsinline controls></video>
+                        <video src="videos/tiktok1.mp4" loop muted playsinline controls></video>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Micro-Documental</h3>
@@ -598,7 +596,7 @@
                 
                 <div class="carrusel-item siguiente">
                     <div class="video-vertical-container">
-                        <video src="ruta_a_tu_video_2.mp4" loop muted playsinline controls></video>
+                        <video src="videos/tiktok2.mp4" loop muted playsinline controls></video>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Clip de Podcast</h3>
@@ -608,7 +606,7 @@
                 
                 <div class="carrusel-item anterior">
                     <div class="video-vertical-container">
-                        <video src="ruta_a_tu_video_3.mp4" loop muted playsinline controls></video>
+                        <video src="videos/tiktok3.mp4" loop muted playsinline controls></video>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Gameplay Viral</h3>
@@ -719,7 +717,7 @@
         }
         document.querySelectorAll('.canvas-puntos').forEach(canvas => new EfectoPuntos(canvas));
 
-        // --- LÓGICA CARRUSEL (NATIVO) ---
+        // --- LÓGICA CARRUSEL (NATIVO CON AUTOPLAY) ---
         const track = document.getElementById('track-vertical');
         const items = Array.from(track.children);
         let currentIndex = 0;
@@ -740,7 +738,7 @@
                     }
                     if(video) {
                         video.pause(); // Pausa los videos que no están en el centro
-                        video.currentTime = 0; // Opcional: reinicia el video al quitarlo del centro
+                        video.currentTime = 0; // Reinicia el video al quitarlo del centro
                     }
                 }
             });
@@ -751,6 +749,7 @@
             actualizarCarrusel();
         }
 
+        // Permite hacer clic en las tarjetas de los lados para que vengan al frente
         items.forEach((item) => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('siguiente')) moverCarrusel(1);
@@ -758,26 +757,49 @@
             });
         });
 
-        // --- YOUTUBE API ---
+        // --- YOUTUBE API PARA AUTOPLAY Y VOLUMEN ---
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
         var playerReel;
         var interactionUnlocked = false;
-        function onYouTubeIframeAPIReady() { playerReel = new YT.Player('reel-video', { events: { 'onReady': onPlayerReady } }); }
-        function prepararVideo() { 
-            interactionUnlocked = true; 
-            if(playerReel && typeof playerReel.playVideo === 'function') { playerReel.playVideo(); playerReel.setVolume(15); } 
+
+        function onYouTubeIframeAPIReady() {
+            playerReel = new YT.Player('reel-video', {
+                events: { 'onReady': onPlayerReady }
+            });
         }
+
+        function prepararVideo() {
+            interactionUnlocked = true;
+            if(playerReel && typeof playerReel.playVideo === 'function') {
+                playerReel.playVideo();
+                playerReel.setVolume(15);
+            }
+        }
+
         function onPlayerReady(event) {
             event.target.setVolume(15);
+            event.target.setPlaybackQuality('hd1080');
+
             const videoObserver = new IntersectionObserver((entradas) => {
                 entradas.forEach(entrada => {
-                    if (entrada.isIntersecting) { if(interactionUnlocked) event.target.unMute(); else event.target.mute(); event.target.playVideo(); } 
-                    else { event.target.pauseVideo(); }
+                    if (entrada.isIntersecting) {
+                        if(interactionUnlocked) {
+                            event.target.unMute();
+                            event.target.setVolume(15);
+                        } else {
+                            event.target.mute();
+                        }
+                        event.target.playVideo();
+                    } else {
+                        event.target.pauseVideo();
+                    }
                 });
             }, { threshold: 0.3 }); 
+
             videoObserver.observe(document.getElementById('reel'));
         }
     </script>
