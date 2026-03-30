@@ -6,10 +6,9 @@
     <title>Aisag | Postproductor Audiovisual</title>
     
     <script>
-        /* Bloqueo agresivo para evitar que el navegador recuerde la posición de scroll */
-        if (history.scrollRestoration) { 
-            history.scrollRestoration = 'manual'; 
-        }
+        if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
+        if (window.location.hash) { window.history.replaceState(null, null, window.location.pathname); }
+        window.scrollTo(0, 0);
     </script>
 
     <style>
@@ -22,7 +21,8 @@
             --transition-main: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        html {
+        /* El scroll suave se activa por JS después de cargar para evitar saltos */
+        html.smooth-scroll {
             scroll-behavior: smooth;
         }
 
@@ -39,7 +39,7 @@
             overflow-x: hidden;
             width: 100%;
             position: relative;
-            touch-action: pan-y; /* Permite solo scroll vertical en móvil */
+            touch-action: pan-y; /* Bloquea el molesto movimiento lateral táctil */
         }
 
         /* --- ANIMACIÓN PARA EL PATRÓN DE ROMBOS --- */
@@ -93,20 +93,21 @@
             justify-content: center;
             min-height: 100vh;
             width: 100%;
-            overflow: hidden; 
+            overflow: hidden;
+        }
+
+        /* FIX 2: Altura dinámica perfecta para el iPhone */
+        .hero-section {
+            height: 100vh; /* Fallback estándar */
+            height: 100dvh; /* Altura dinámica estricta para iOS */
+            min-height: unset; 
+            padding-top: 0; /* Quita el padding para que encaje perfecto sin desbordar */
+            padding-bottom: 0;
         }
 
         section.seccion-corta {
             min-height: auto;
             padding: 120px 5vw;
-        }
-
-        /* FIX 1: Altura estricta para el Hero en iOS/Celulares */
-        .hero-section {
-            height: 100vh; /* Fallback estándar */
-            height: 100svh; /* Dynamic Viewport Height (Solución para iPhone) */
-            min-height: unset; /* Anula el min-height del section genérico */
-            padding: 0 5vw; /* Quitamos padding vertical para que encaje perfecto */
         }
 
         .titulo-seccion {
@@ -272,7 +273,7 @@
             margin-bottom: 25px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border: 2px solid #fff; 
-            box-shadow: 0 0 0 transparent; /* Sin sombra gruesa */
+            box-shadow: 0 0 0 transparent; /* Sin pop-up duro */
         }
 
         .video-container iframe {
@@ -507,7 +508,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS (GRID MANUAL) --- */
+        /* --- FIX 3: GRID DE DISEÑO MANUAL Y A PRUEBA DE FALLOS --- */
         .grid-diseno {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -532,8 +533,9 @@
             display: flex;
         }
 
+        /* El estirado definitivo para el banner */
         .grid-diseno .banner-destacado {
-            grid-column: span 2; 
+            grid-column: 1 / -1; 
         }
 
         .grid-diseno .item-grafico img {
@@ -691,7 +693,7 @@
             transform: translateY(0) scale(1);
         }
 
-        /* --- RESTRINGIR EFECTOS HOVER SOLO A COMPUTADORAS (Desactiva el "pop-up trabado" en móviles) --- */
+        /* --- RESTRINGIR EFECTOS HOVER SOLO A COMPUTADORAS (Limpia los dispositivos táctiles) --- */
         @media (hover: hover) {
             .hero-imagen:hover {
                 filter: grayscale(0%);
@@ -703,11 +705,6 @@
                 color: #fff;
                 border-color: #fff;
                 box-shadow: 0 0 15px var(--neon-glow-subtle); 
-            }
-            .btn-claro:hover {
-                background-color: #fff; 
-                color: #000;
-                box-shadow: 0 0 15px rgba(0,0,0,0.15); 
             }
             .reel-wrapper:hover {
                 transform: translate(-5px, -5px); 
@@ -768,7 +765,6 @@
             .grid-trabajos { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
             .trabajo-item.destacado { grid-column: span 1; }
             
-            /* FIX 3: Solo agregar la sombra dura a bloques blancos en celular, NO a los oscuros (.video-container) */
             .reel-wrapper, .video-vertical-container { box-shadow: 10px 10px 0px currentColor; }
             
             section { padding: 10vh 8vw; }
@@ -780,7 +776,7 @@
             .carrusel-btn.next { right: 0; }
 
             .grid-diseno { grid-template-columns: 1fr; max-width: 400px; }
-            .grid-diseno .banner-destacado { grid-column: span 1; }
+            .grid-diseno .banner-destacado { grid-column: 1 / -1; } /* Seguro en grid */
 
             .arsenal-floating-box {
                 max-width: 90%;
@@ -799,17 +795,14 @@
             section { padding: 8vh 5vw; }
             section.seccion-corta { padding: 60px 5vw; }
             
-            /* Ajustes para el Carrusel Vertical en pantallas pequeñas */
             .carrusel-vertical-wrapper { height: 500px; }
             .carrusel-item { width: 240px; }
             .carrusel-item.siguiente { transform: translateX(55%) scale(0.8) translateZ(-100px); }
             .carrusel-item.anterior { transform: translateX(-55%) scale(0.8) translateZ(-100px); }
             .carrusel-btn { width: 40px; height: 40px; font-size: 1rem; }
             
-            /* Ajustes Lightbox Mobile */
             .lightbox-cerrar { top: 15px; right: 15px; font-size: 2.5rem; }
             
-            /* Ajustes Contacto Mobile */
             .seccion-final p { font-size: 0.95rem; }
             .redes-sociales { gap: 15px; flex-wrap: wrap; }
             .redes-sociales a { width: 45px; height: 45px; }
@@ -848,7 +841,7 @@
         <h2 class="titulo-seccion animar">Demo Reel</h2>
         <div class="reel-container animar">
             <div class="reel-wrapper">
-                <iframe id="reel-video" loading="lazy" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe id="reel-video" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -1009,10 +1002,16 @@
     </section>
 
     <script>
-        // --- PREVENCIÓN Y BLOQUEO DEL SALTO DE SCROLL AL INICIAR ---
+        // JS: Agregamos smooth-scroll con delay solo para anclas dentro de la página,
+        // garantizando que el load inicial sea estrictamente en la cima
+        setTimeout(() => {
+            document.documentElement.classList.add('smooth-scroll');
+        }, 1000);
+
         window.onload = () => {
-            window.scrollTo(0, 0); // Disparo inmediato al cargar el contenido
-            
+            // Confirmación secundaria de reset de posición
+            window.scrollTo(0, 0);
+
             setTimeout(() => {
                 const img = document.getElementById('img-hero');
                 if(img) { img.style.opacity = '1'; img.style.transform = 'scale(1)'; }
@@ -1030,9 +1029,6 @@
                 vid.volume = 0.15;
             });
         };
-        
-        // Cierre de seguridad extra para Safari
-        window.addEventListener('beforeunload', () => window.scrollTo(0,0));
 
         // --- INTERSECTION OBSERVER ---
         const observador = new IntersectionObserver((entradas) => {
@@ -1040,7 +1036,7 @@
         }, { threshold: 0.15 });
         document.querySelectorAll('.animar').forEach((el) => observador.observe(el));
 
-        // --- CANVAS PUNTOS (CON SOPORTE TÁCTIL) ---
+        // --- CANVAS PUNTOS ---
         class EfectoPuntos {
             constructor(canvas) {
                 this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.parent = canvas.parentElement;
