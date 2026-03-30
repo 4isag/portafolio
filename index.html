@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giuliano | Postproductor Audiovisual</title>
+    <title>Aisag | Postproductor Audiovisual</title>
     <style>
         /* --- VARIABLES Y RESET --- */
         :root {
@@ -27,6 +27,12 @@
             color: var(--text-main);
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* --- ANIMACIÓN PARA EL PATRÓN DE ROMBOS --- */
+        @keyframes scrollRombos {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 0; }
         }
 
         /* --- BLOQUES CON DISEÑOS DE FONDO --- */
@@ -62,6 +68,7 @@
             color: var(--text-dark);
             position: relative;
             box-shadow: inset 0 20px 50px rgba(0,0,0,0.1); 
+            animation: scrollRombos 3s linear infinite;
         }
 
         /* CONFIGURACIÓN MAESTRA DE BLOQUES */
@@ -73,6 +80,11 @@
             justify-content: center;
             min-height: 100vh;
             width: 100%;
+        }
+
+        section.seccion-corta {
+            min-height: auto;
+            padding: 120px 5vw;
         }
 
         .titulo-seccion {
@@ -129,7 +141,7 @@
             font-weight: 400;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: #888;
+            color: #fff;
             margin-bottom: 20px;
             display: block;
         }
@@ -188,9 +200,11 @@
             background-color: #fff;
             border: 1px solid #fff;
         }
+        
         .btn-oscuro:hover {
-            background-color: transparent;
+            background-color: #000;
             color: #fff;
+            border-color: #fff;
             box-shadow: 0 0 15px var(--neon-glow-subtle); 
         }
 
@@ -200,7 +214,7 @@
             border: 1px solid #000;
         }
         .btn-claro:hover {
-            background-color: transparent;
+            background-color: #fff; 
             color: #000;
             box-shadow: 0 0 15px rgba(0,0,0,0.15); 
         }
@@ -237,12 +251,11 @@
             border: none;
         }
 
-
-        /* --- 3. PORTAFOLIO / YOUTUBE (NEGRO) --- */
+        /* --- 3. PORTAFOLIO / YOUTUBE (NEGRO - 2 COLUMNAS) --- */
         .grid-trabajos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 60px 40px; 
             width: 100%;
             max-width: 1100px;
             text-align: left;
@@ -251,6 +264,10 @@
         .trabajo-item {
             display: flex;
             flex-direction: column;
+        }
+
+        .trabajo-item.destacado {
+            grid-column: span 2; 
         }
 
         .video-container {
@@ -279,18 +296,13 @@
             box-shadow: 20px 20px 0px #fff; 
         }
 
-        .trabajo-info h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: var(--text-main); 
-        }
         .trabajo-info p {
             font-size: 0.85rem;
             text-transform: uppercase;
             font-weight: 600;
             color: #888;
             letter-spacing: 1px;
+            margin-top: 10px;
         }
 
         /* --- 4. FORMATOS VERTICALES (CARRUSEL - BLANCO) --- */
@@ -349,7 +361,6 @@
             pointer-events: auto; 
         }
 
-        /* Bloquea interacciones en videos inactivos */
         .carrusel-item:not(.activo) video {
             pointer-events: none;
         }
@@ -366,7 +377,6 @@
             transition: all 0.4s ease;
         }
 
-        /* --- ESTILO AÑADIDO PARA LA ETIQUETA VIDEO --- */
         .video-vertical-container video {
             position: absolute;
             top: 0;
@@ -423,36 +433,146 @@
             letter-spacing: 1px;
         }
 
-
-        /* --- 5. HABILIDADES Y CONTACTO (NEGRO) --- */
-        .seccion-final {
-            text-align: center;
+        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS (NEGRO) --- */
+        .masonry-grafica {
+            column-count: 3;
+            column-gap: 40px;
+            width: 100%;
+            max-width: 1100px;
         }
 
+        .item-grafico {
+            break-inside: avoid;
+            margin-bottom: 40px;
+            position: relative;
+            width: 100%;
+            background-color: #000;
+            border: 2px solid #fff; 
+            box-shadow: 15px 15px 0px #fff; 
+            transition: all 0.4s ease;
+            cursor: pointer;
+            overflow: hidden;
+            display: inline-block; 
+        }
+
+        .item-grafico img {
+            width: 100%;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .item-grafico:hover {
+            transform: translate(-5px, -5px); 
+            box-shadow: 20px 20px 0px #fff; 
+        }
+
+        .item-grafico:hover img {
+            transform: scale(1.05);
+        }
+
+        .overlay-grafico {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px 20px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+            color: #fff;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .item-grafico:hover .overlay-grafico {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .overlay-grafico h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .overlay-grafico p {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #bbb;
+            letter-spacing: 1px;
+        }
+
+        /* --- 6. ARSENAL TÉCNICO (DISEÑO FLOTANTE) --- */
         .skills-list {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 15px;
-            max-width: 800px;
+            max-width: 100%; 
             margin-top: 50px;
         }
 
-        .skill-tag {
+        .skill-tag-arsenal {
             font-size: 1rem;
             font-weight: 600;
-            color: rgba(255,255,255,0.7);
+            color: rgba(0,0,0,0.8);
+            background-color: #ffffff; 
             padding: 12px 25px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(0,0,0,0.15);
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.4s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .skill-tag:hover {
-            border-color: #fff;
-            color: #fff;
-            background-color: rgba(255,255,255,0.05);
-            box-shadow: 0 0 10px var(--neon-glow-subtle);
+        
+        .skill-tag-arsenal:hover {
+            border-color: #000;
+            color: #000;
+            background-color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+            transform: translateY(-3px); 
+        }
+
+        .arsenal-floating-box {
+            background-color: #fff; 
+            background-image: 
+                linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%), 
+                linear-gradient(-45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.02) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.02) 75%);
+            background-size: 40px 40px;
+            color: #000;
+            max-width: 1100px; 
+            margin: 0 auto;
+            padding: 80px 40px;
+            border-radius: 20px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1); 
+            position: relative;
+            z-index: 2;
+            animation: scrollRombos 3s linear infinite; 
+        }
+
+        .arsenal-floating-box .titulo-seccion {
+            color: #000;
+            margin-bottom: 40px;
+            font-size: 3.5rem; 
+        }
+
+        /* --- 7. CONTACTO (NEGRO) --- */
+        .seccion-final {
+            text-align: center;
+        }
+
+        .seccion-final .titulo-seccion,
+        .seccion-final p {
+            color: var(--text-main);
         }
 
         .redes-sociales {
@@ -476,8 +596,8 @@
         }
 
         .redes-sociales a svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: currentColor;
         }
 
@@ -503,14 +623,32 @@
             .hero-text { text-align: center; }
             .hero h1 { font-size: 2.8rem; }
             .titulo-seccion { font-size: 2.2rem; margin-bottom: 40px; }
+            
             .grid-trabajos { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+            .trabajo-item.destacado { grid-column: span 1; }
+            
             .reel-wrapper, .video-container, .video-vertical-container { box-shadow: 10px 10px 0px currentColor; }
             section { padding: 10vh 8vw; }
+            section.seccion-corta { padding: 80px 8vw; }
             
             .carrusel-item.siguiente { transform: translateX(65%) scale(0.85); }
             .carrusel-item.anterior { transform: translateX(-65%) scale(0.85); }
             .carrusel-btn.prev { left: 0; }
             .carrusel-btn.next { right: 0; }
+
+            .masonry-grafica { column-count: 2; column-gap: 20px; }
+            .item-grafico { margin-bottom: 20px; box-shadow: 10px 10px 0px #fff; }
+
+            .arsenal-floating-box {
+                max-width: 90%;
+                padding: 60px 20px;
+                border-radius: 15px;
+            }
+            .arsenal-floating-box .titulo-seccion { font-size: 2.2rem; }
+        }
+
+        @media (max-width: 600px) {
+            .masonry-grafica { column-count: 1; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -520,10 +658,10 @@
     <section class="bloque-oscuro">
         <canvas class="canvas-puntos"></canvas>
         <div class="hero-imagen-container">
-            <img src="https://media.licdn.com/dms/image/v2/D4D03AQEL1rqH3PsMag/profile-displayphoto-scale_400_400/B4DZ0ZztkTKgAg-/0/1774254480691?e=1776297600&v=beta&t=Suzbm43FN4SH61v4Qg4kFQeFQ3Q4pVaeTfC-eIGyFFw" alt="Foto de Perfil" class="hero-imagen" id="img-hero">
+            <img src="https://yt3.googleusercontent.com/xqL0mIxIwU0ltc3SIStedzqtyxtDmx076HP2GtYqKP8A-zqBOxOYWrsYDpjPHXR4ejB1XZqrDhg=s160-c-k-c0x00ffffff-no-rj" alt="Foto de Perfil" class="hero-imagen" id="img-hero">
         </div>
         <div class="hero-text">
-            <span class="hero-presentacion fade-arriba" id="txt-pres">¡Hola, soy Giuliano!</span>
+            <span class="hero-presentacion fade-arriba" id="txt-pres">¡Hola, soy Aisag!</span>
             <h1>
                 <span class="linea-oculta"><span class="texto-interno" id="titulo-1">POSTPRODUCTOR</span></span>
                 <span class="linea-oculta"><span class="texto-interno" id="titulo-2">AUDIOVISUAL</span></span>
@@ -539,7 +677,7 @@
         <h2 class="titulo-seccion animar">Demo Reel</h2>
         <div class="reel-container animar">
             <div class="reel-wrapper">
-                <iframe id="reel-video" src="https://www.youtube.com/embed/Da_sa7Zfu10?rel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe id="reel-video" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -548,40 +686,41 @@
         <canvas class="canvas-puntos"></canvas>
         <h2 class="titulo-seccion animar">Contenido para Youtube</h2>
         <div class="grid-trabajos">
-            <div class="trabajo-item animar">
+            
+            <div class="trabajo-item animar destacado">
                 <div class="video-container">
                     <iframe src="https://www.youtube.com/embed/s0aTdQXtPkw?si=kyBD9tJthFV4p7vj" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
-                    <h3>Proyecto de Egreso Universitario</h3>
-                    <p>Postproducción Integral | Color | Sonido | VFX</p>
+                    <p>Motion Graphics | Transiciones | Efectos de sonido | Doblaje</p>
                 </div>
             </div>
+            
             <div class="trabajo-item animar">
                 <div class="video-container">
                     <iframe src="https://www.youtube.com/embed/QflkDmKh-lw?si=621f7B2gjR4BrHLs" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
-                    <h3>Montaje Dinámico para Creadores</h3>
-                    <p>Retención | Cortes de Ritmo | Motion Graphics</p>
+                    <p>Ritmo Frenético | Memes | Tracking y animación de Textos</p>
                 </div>
             </div>
+            
             <div class="trabajo-item animar">
                 <div class="video-container">
                     <iframe src="https://www.youtube.com/embed/a-jmu_ThYjI?si=PvSaUZKe8lV7QegL" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
-                    <h3>Highlights de Gaming</h3>
-                    <p>Ritmo Frenético | Memes | Tracking de Textos</p>
+                    <p>Motion Graphics | Transiciones | Efectos de sonido | Doblaje | Narrativa</p>
                 </div>
             </div>
+            
         </div>
     </section>
 
     <section id="verticales" class="bloque-claro">
         <h2 class="titulo-seccion animar">TikToks, Reels y Shorts</h2>
         <div class="carrusel-vertical-wrapper animar">
-            <button class="carrusel-btn prev" onclick="moverCarrusel(-1)">&#10094;</button>
+            <button class="carrusel-btn prev" onclick="moverCarrusel(-1)">❮</button>
             <div class="carrusel-track" id="track-vertical">
                 
                 <div class="carrusel-item activo">
@@ -589,8 +728,8 @@
                         <video src="videos/tiktok1.mp4" loop muted playsinline controls></video>
                     </div>
                     <div class="trabajo-info-claro">
-                        <h3>Micro-Documental</h3>
-                        <p>Subtítulos Dinámicos | Sound Design</p>
+                        <h3>Memes</h3>
+                        <p>Enganche | Motion Graphics | Subtítulos Dinámicos</p>
                     </div>
                 </div>
                 
@@ -599,8 +738,8 @@
                         <video src="videos/tiktok2.mp4" loop muted playsinline controls></video>
                     </div>
                     <div class="trabajo-info-claro">
-                        <h3>Clip de Podcast</h3>
-                        <p>Cambio de Cámaras | Retención Activa</p>
+                        <h3>Historias</h3>
+                        <p>Doblaje | Diseño Sonoro | Restauración y Limpieza de Audio</p>
                     </div>
                 </div>
                 
@@ -609,40 +748,91 @@
                         <video src="videos/tiktok3.mp4" loop muted playsinline controls></video>
                     </div>
                     <div class="trabajo-info-claro">
-                        <h3>Gameplay Viral</h3>
-                        <p>Efectos Visuales | Pacing Rápido</p>
+                        <h3>Gameplay</h3>
+                        <p>Pacing Rápido | Subtítulos Dinámicos | Retención activa </p>
                     </div>
                 </div>
                 
             </div>
-            <button class="carrusel-btn next" onclick="moverCarrusel(1)">&#10095;</button>
+            <button class="carrusel-btn next" onclick="moverCarrusel(1)">❯</button>
         </div>
     </section>
 
-    <section class="bloque-oscuro seccion-final">
+    <section id="diseno" class="bloque-oscuro">
         <canvas class="canvas-puntos"></canvas>
-        <h2 class="titulo-seccion animar" style="margin-bottom: 20px;">Arsenal Técnico</h2>
-        <div class="skills-list animar">
-            <span class="skill-tag">DaVinci Resolve</span>
-            <span class="skill-tag">Blender</span>
-            <span class="skill-tag">FL Studio</span>
-            <span class="skill-tag">Reaper</span>
-        </div>
-        <div style="margin-top: 100px; width: 100%;">
-            <h2 class="titulo-seccion animar">¿Hablamos?</h2>
-            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; color: #bbb; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la postproducción a un estándar profesional, cuéntame sobre tu proyecto.</p>
-            <div class="animar">
-                <a href="mailto:giuliano.audiovisual@gmail.com" class="btn btn-oscuro">Enviar Mensaje</a>
+        <h2 class="titulo-seccion animar">Diseño y Miniaturas</h2>
+        
+        <div class="masonry-grafica">
+            
+            <div class="item-grafico animar">
+                <img src="imagenes/miniatura1.jpg" alt="Miniatura YouTube">
+                <div class="overlay-grafico">
+                    <h3>Miniatura YouTube</h3>
+                    <p>Clickbait | Alto CTR</p>
+                </div>
             </div>
+
+            <div class="item-grafico animar">
+                <img src="imagenes/poster.jpg" alt="Póster">
+                <div class="overlay-grafico">
+                    <h3>Póster Cortometraje "Veintialgo"</h3>
+                    <p>Diseño Editorial | Cine</p>
+                </div>
+            </div>
+
+            <div class="item-grafico animar">
+                <img src="imagenes/post.jpg" alt="Post Instagram">
+                <div class="overlay-grafico">
+                    <h3>Post Promocional</h3>
+                    <p>Instagram | Campañas</p>
+                </div>
+            </div>
+
+            <div class="item-grafico animar">
+                <img src="imagenes/miniatura2.jpg" alt="Miniatura Gaming">
+                <div class="overlay-grafico">
+                    <h3>Miniatura Gaming</h3>
+                    <p>Composición | Color Grading</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="arsenal" class="bloque-oscuro seccion-corta"> 
+        <canvas class="canvas-puntos"></canvas> 
+        <div class="arsenal-floating-box animar"> 
+            <h2 class="titulo-seccion animar">Arsenal Técnico</h2>
+            <div class="skills-list animar">
+                <span class="skill-tag-arsenal">Adobe Premiere Pro</span>
+                <span class="skill-tag-arsenal">DaVinci Resolve</span>
+                <span class="skill-tag-arsenal">After Effects</span>
+                <span class="skill-tag-arsenal">Photoshop</span>
+                <span class="skill-tag-arsenal">Blender</span>
+                <span class="skill-tag-arsenal">FL Studio</span>
+                <span class="skill-tag-arsenal">Reaper</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="bloque-oscuro seccion-final seccion-corta">
+        <canvas class="canvas-puntos"></canvas>
+        <div style="width: 100%; position: relative; z-index: 2;">
+            <h2 class="titulo-seccion animar" style="margin-bottom: 20px;">¿Hablamos?</h2>
+            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la edición de tu contenido a un estándar profesional, cuéntame sobre tu proyecto.</p>
+            
             <div class="redes-sociales animar">
-                <a href="https://www.instagram.com/giulianolopez.av/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <a href="https://www.instagram.com/4i5ag?igsh=MWk0a2QybHlpdmttMA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                     <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
-                <a href="https://discord.com/users/tu_id" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+                <a href="https://discord.com/users/399394358379544576" target="_blank" rel="noopener noreferrer" aria-label="Discord"> 
                     <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
                 </a>
-                <a href="https://x.com/tu_usuario" target="_blank" rel="noopener noreferrer" aria-label="X">
-                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.005 4.04H5.078z"/></svg>
+                <a href="https://x.com/4isag" target="_blank" rel="noopener noreferrer" aria-label="X">
+                    <svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+                </a>
+                <a href="https://wa.me/+56937093254" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 </a>
             </div>
         </div>
@@ -681,12 +871,37 @@
             constructor(canvas) {
                 this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.parent = canvas.parentElement;
                 this.dots = []; this.spacing = 26; this.mouse = { x: -1000, y: -1000 }; this.hoverRadius = 140;
+                
+                // Track global coordinates
+                this.clientX = -1000;
+                this.clientY = -1000;
+
                 this.resize(); window.addEventListener('resize', () => this.resize());
-                this.parent.addEventListener('mousemove', (e) => {
+                
+                window.addEventListener('mousemove', (e) => {
+                    this.clientX = e.clientX;
+                    this.clientY = e.clientY;
                     const rect = this.canvas.getBoundingClientRect();
-                    this.mouse.x = e.clientX - rect.left; this.mouse.y = e.clientY - rect.top;
+                    this.mouse.x = this.clientX - rect.left; 
+                    this.mouse.y = this.clientY - rect.top;
                 });
-                this.parent.addEventListener('mouseleave', () => { this.mouse.x = -1000; this.mouse.y = -1000; });
+                
+                // Update coordinates on scroll
+                window.addEventListener('scroll', () => {
+                    if(this.clientX !== -1000) {
+                        const rect = this.canvas.getBoundingClientRect();
+                        this.mouse.x = this.clientX - rect.left;
+                        this.mouse.y = this.clientY - rect.top;
+                    }
+                });
+
+                document.addEventListener('mouseleave', () => { 
+                    this.clientX = -1000;
+                    this.clientY = -1000;
+                    this.mouse.x = -1000; 
+                    this.mouse.y = -1000; 
+                });
+                
                 this.animar = this.animar.bind(this); requestAnimationFrame(this.animar);
             }
             resize() { this.canvas.width = this.parent.offsetWidth; this.canvas.height = this.parent.offsetHeight; this.crearPuntos(); }
@@ -717,7 +932,7 @@
         }
         document.querySelectorAll('.canvas-puntos').forEach(canvas => new EfectoPuntos(canvas));
 
-        // --- LÓGICA CARRUSEL (NATIVO CON AUTOPLAY) ---
+        // --- LÓGICA CARRUSEL ---
         const track = document.getElementById('track-vertical');
         const items = Array.from(track.children);
         let currentIndex = 0;
@@ -725,11 +940,11 @@
         function actualizarCarrusel() {
             items.forEach((item, index) => {
                 item.classList.remove('activo', 'siguiente', 'anterior');
-                const video = item.querySelector('video'); // Busca el video dentro del item
+                const video = item.querySelector('video'); 
                 
                 if (index === currentIndex) { 
                     item.classList.add('activo'); 
-                    if(video) video.play().catch(e => {}); // Reproduce automáticamente al centrar
+                    if(video) video.play().catch(e => {}); 
                 } else {
                     if (index === (currentIndex + 1) % items.length) { 
                         item.classList.add('siguiente'); 
@@ -737,8 +952,8 @@
                         item.classList.add('anterior'); 
                     }
                     if(video) {
-                        video.pause(); // Pausa los videos que no están en el centro
-                        video.currentTime = 0; // Reinicia el video al quitarlo del centro
+                        video.pause(); 
+                        video.currentTime = 0; 
                     }
                 }
             });
@@ -749,7 +964,6 @@
             actualizarCarrusel();
         }
 
-        // Permite hacer clic en las tarjetas de los lados para que vengan al frente
         items.forEach((item) => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('siguiente')) moverCarrusel(1);
@@ -757,7 +971,7 @@
             });
         });
 
-        // --- YOUTUBE API PARA AUTOPLAY Y VOLUMEN ---
+        // --- YOUTUBE API ---
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
