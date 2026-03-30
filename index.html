@@ -21,7 +21,6 @@
             --transition-main: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* El scroll suave se activa por JS después de cargar para evitar saltos */
         html.smooth-scroll {
             scroll-behavior: smooth;
         }
@@ -39,7 +38,7 @@
             overflow-x: hidden;
             width: 100%;
             position: relative;
-            touch-action: pan-y; /* Bloquea el molesto movimiento lateral táctil */
+            touch-action: pan-y; 
         }
 
         /* --- ANIMACIÓN PARA EL PATRÓN DE ROMBOS --- */
@@ -96,13 +95,13 @@
             overflow: hidden;
         }
 
-        /* FIX 2: Altura dinámica perfecta para el iPhone */
+        /* FIX DEFINITIVO PARA IOS/SAFARI Y PANTALLAS PEQUEÑAS */
         .hero-section {
-            height: 100vh; /* Fallback estándar */
-            height: 100dvh; /* Altura dinámica estricta para iOS */
-            min-height: unset; 
-            padding-top: 0; /* Quita el padding para que encaje perfecto sin desbordar */
-            padding-bottom: 0;
+            min-height: 100vh; 
+            min-height: -webkit-fill-available; /* Hack mágico para Safari iOS */
+            min-height: 100dvh; 
+            padding: 5vh 5vw; /* Da espacio para que el contenido respire */
+            justify-content: center;
         }
 
         section.seccion-corta {
@@ -273,7 +272,7 @@
             margin-bottom: 25px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border: 2px solid #fff; 
-            box-shadow: 0 0 0 transparent; /* Sin pop-up duro */
+            box-shadow: 0 0 0 transparent; 
         }
 
         .video-container iframe {
@@ -508,7 +507,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- FIX 3: GRID DE DISEÑO MANUAL Y A PRUEBA DE FALLOS --- */
+        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS --- */
         .grid-diseno {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -533,7 +532,6 @@
             display: flex;
         }
 
-        /* El estirado definitivo para el banner */
         .grid-diseno .banner-destacado {
             grid-column: 1 / -1; 
         }
@@ -693,7 +691,7 @@
             transform: translateY(0) scale(1);
         }
 
-        /* --- RESTRINGIR EFECTOS HOVER SOLO A COMPUTADORAS (Limpia los dispositivos táctiles) --- */
+        /* --- RESTRINGIR EFECTOS HOVER SOLO A COMPUTADORAS --- */
         @media (hover: hover) {
             .hero-imagen:hover {
                 filter: grayscale(0%);
@@ -776,7 +774,7 @@
             .carrusel-btn.next { right: 0; }
 
             .grid-diseno { grid-template-columns: 1fr; max-width: 400px; }
-            .grid-diseno .banner-destacado { grid-column: 1 / -1; } /* Seguro en grid */
+            .grid-diseno .banner-destacado { grid-column: 1 / -1; } 
 
             .arsenal-floating-box {
                 max-width: 90%;
@@ -788,8 +786,12 @@
 
         /* --- NUEVAS MEDIA QUERIES (ESPECÍFICO PARA CELULARES) --- */
         @media (max-width: 600px) {
-            .hero h1 { font-size: 2.2rem; letter-spacing: -1px; }
-            .hero-subtitle { font-size: 1rem; margin-bottom: 30px; }
+            /* AJUSTE PARA QUE EN CELULARES PEQUEÑOS NADA EMPUJE EL BLOQUE */
+            .hero-imagen { max-width: 150px; margin-bottom: 20px; }
+            .hero h1 { font-size: 2.2rem; letter-spacing: -1px; margin-bottom: 5px; }
+            .hero-presentacion { margin-bottom: 10px; }
+            .hero-subtitle { font-size: 1rem; margin-bottom: 25px; }
+            
             .titulo-seccion { font-size: 1.8rem; margin-bottom: 30px; }
             
             section { padding: 8vh 5vw; }
@@ -807,6 +809,12 @@
             .redes-sociales { gap: 15px; flex-wrap: wrap; }
             .redes-sociales a { width: 45px; height: 45px; }
             .redes-sociales a svg { width: 20px; height: 20px; }
+        }
+        
+        /* Ultra pequeño (iPhone SE / viejos) */
+        @media (max-height: 700px) and (max-width: 600px) {
+            .hero-imagen { max-width: 120px; }
+            .hero h1 { font-size: 1.8rem; }
         }
 
     </style>
@@ -841,7 +849,7 @@
         <h2 class="titulo-seccion animar">Demo Reel</h2>
         <div class="reel-container animar">
             <div class="reel-wrapper">
-                <iframe id="reel-video" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe id="reel-video" loading="lazy" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -1002,15 +1010,11 @@
     </section>
 
     <script>
-        // JS: Agregamos smooth-scroll con delay solo para anclas dentro de la página,
-        // garantizando que el load inicial sea estrictamente en la cima
-        setTimeout(() => {
-            document.documentElement.classList.add('smooth-scroll');
-        }, 1000);
-
+        // --- PREVENCIÓN DEL SALTO DE SCROLL ---
         window.onload = () => {
-            // Confirmación secundaria de reset de posición
-            window.scrollTo(0, 0);
+            setTimeout(() => {
+                document.documentElement.classList.add('smooth-scroll');
+            }, 1000);
 
             setTimeout(() => {
                 const img = document.getElementById('img-hero');
