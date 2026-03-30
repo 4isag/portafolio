@@ -32,7 +32,7 @@
         /* --- ANIMACIÓN PARA EL PATRÓN DE ROMBOS --- */
         @keyframes scrollRombos {
             0% { background-position: 0 0; }
-            100% { background-position: 40px 0; }
+            100% { background-position: 40px 0; } 
         }
 
         /* --- BLOQUES CON DISEÑOS DE FONDO --- */
@@ -68,7 +68,7 @@
             color: var(--text-dark);
             position: relative;
             box-shadow: inset 0 20px 50px rgba(0,0,0,0.1); 
-            animation: scrollRombos 3s linear infinite; 
+            animation: scrollRombos 15s linear infinite; 
         }
 
         /* CONFIGURACIÓN MAESTRA DE BLOQUES */
@@ -208,6 +208,17 @@
             box-shadow: 0 0 15px var(--neon-glow-subtle); 
         }
 
+        .btn-claro {
+            color: #fff;
+            background-color: #000;
+            border: 1px solid #000;
+        }
+        .btn-claro:hover {
+            background-color: #fff; 
+            color: #000;
+            box-shadow: 0 0 15px rgba(0,0,0,0.15); 
+        }
+
         /* --- 2. DEMO REEL (BLANCO) --- */
         .reel-container {
             width: 100%;
@@ -334,7 +345,6 @@
             pointer-events: auto; 
         }
 
-        /* Cambiamos el cursor solo para el video central para indicar que es interactivo */
         .carrusel-item.activo .video-vertical-container {
             cursor: pointer;
         }
@@ -370,7 +380,6 @@
             box-shadow: 15px 15px 0px #000;
             transition: all 0.4s ease;
             
-            /* FiX GPU Rendering para evitar parpadeos negros */
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
             -webkit-transform: translate3d(0, 0, 0);
@@ -387,6 +396,48 @@
             object-fit: cover;
             display: block;
         }
+
+        /* --- BOTONES PLAY/PAUSE (UX MEJORADO) --- */
+        .custom-video-controls {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            pointer-events: none; 
+            color: #fff;
+            z-index: 10;
+        }
+
+        .carrusel-item.activo .video-vertical-container:hover .custom-video-controls {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Mantiene el botón visible si está pausado */
+        .video-vertical-container.is-paused .custom-video-controls {
+            opacity: 1;
+        }
+
+        .icon-play, .icon-pause {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            display: none;
+        }
+
+        /* Lógica visual Play/Pause */
+        .video-vertical-container.is-paused .icon-play { display: block; }
+        .video-vertical-container:not(.is-paused) .icon-pause { display: block; }
 
         .carrusel-btn {
             position: absolute;
@@ -557,7 +608,7 @@
             border: 1px solid rgba(255,255,255,0.1); 
             position: relative;
             z-index: 2;
-            animation: scrollRombos 3s linear infinite; 
+            animation: scrollRombos 15s linear infinite; 
         }
 
         .arsenal-floating-box .titulo-seccion {
@@ -727,6 +778,10 @@
                 <div class="carrusel-item activo">
                     <div class="video-vertical-container">
                         <video src="videos/tiktok1.mp4" loop muted playsinline></video>
+                        <div class="custom-video-controls">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </div>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Memes</h3>
@@ -737,6 +792,10 @@
                 <div class="carrusel-item siguiente">
                     <div class="video-vertical-container">
                         <video src="videos/tiktok2.mp4" loop muted playsinline></video>
+                        <div class="custom-video-controls">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </div>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Historias</h3>
@@ -747,6 +806,10 @@
                 <div class="carrusel-item anterior">
                     <div class="video-vertical-container">
                         <video src="videos/tiktok3.mp4" loop muted playsinline></video>
+                        <div class="custom-video-controls">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </div>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Gameplay</h3>
@@ -873,7 +936,6 @@
                 this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.parent = canvas.parentElement;
                 this.dots = []; this.spacing = 26; this.mouse = { x: -1000, y: -1000 }; this.hoverRadius = 140;
                 
-                // Track global coordinates
                 this.clientX = -1000;
                 this.clientY = -1000;
 
@@ -887,7 +949,6 @@
                     this.mouse.y = this.clientY - rect.top;
                 });
                 
-                // Update coordinates on scroll
                 window.addEventListener('scroll', () => {
                     if(this.clientX !== -1000) {
                         const rect = this.canvas.getBoundingClientRect();
@@ -942,10 +1003,15 @@
             items.forEach((item, index) => {
                 item.classList.remove('activo', 'siguiente', 'anterior');
                 const video = item.querySelector('video'); 
+                const container = item.querySelector('.video-vertical-container');
                 
                 if (index === currentIndex) { 
                     item.classList.add('activo'); 
-                    if(video) video.play().catch(e => {}); 
+                    if(video) {
+                        video.play().then(() => {
+                            if(container) container.classList.remove('is-paused');
+                        }).catch(e => {}); 
+                    }
                 } else {
                     if (index === (currentIndex + 1) % items.length) { 
                         item.classList.add('siguiente'); 
@@ -955,6 +1021,7 @@
                     if(video) {
                         video.pause(); 
                         video.currentTime = 0; 
+                        if(container) container.classList.add('is-paused');
                     }
                 }
             });
@@ -970,12 +1037,45 @@
                 if (item.classList.contains('siguiente')) moverCarrusel(1);
                 else if (item.classList.contains('anterior')) moverCarrusel(-1);
                 else if (item.classList.contains('activo')) {
-                    // --- Toggle Mute al hacer clic en el centro ---
                     const video = item.querySelector('video');
-                    if(video) video.muted = !video.muted;
+                    const container = item.querySelector('.video-vertical-container');
+                    if(video) {
+                        if (video.paused) {
+                            video.play();
+                            container.classList.remove('is-paused');
+                        } else {
+                            video.pause();
+                            container.classList.add('is-paused');
+                        }
+                    }
                 }
             });
         });
+
+        // --- AUTOPLAY VERTICALES AL HACER SCROLL ---
+        const verticalesSeccion = document.getElementById('verticales');
+        const verticalesObserver = new IntersectionObserver((entradas) => {
+            entradas.forEach(entrada => {
+                const activeItem = document.querySelector('.carrusel-item.activo');
+                if (activeItem) {
+                    const video = activeItem.querySelector('video');
+                    const container = activeItem.querySelector('.video-vertical-container');
+                    if (entrada.isIntersecting) {
+                        if (video) {
+                            video.play().then(() => {
+                                container.classList.remove('is-paused');
+                            }).catch(e => {});
+                        }
+                    } else {
+                        if (video) {
+                            video.pause();
+                            container.classList.add('is-paused');
+                        }
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+        if(verticalesSeccion) verticalesObserver.observe(verticalesSeccion);
 
         // --- YOUTUBE API ---
         var tag = document.createElement('script');
