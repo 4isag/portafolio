@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aisag | Postproductor Audiovisual</title>
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R0JDEKFF13"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-R0JDEKFF13');
+    </script>
+
     <script>
         /* Bloqueo agresivo para evitar que el navegador recuerde la posición de scroll */
         if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
@@ -962,7 +971,7 @@
             </div>
 
             <div class="item-grafico animar banner-destacado" onclick="abrirLightbox(this)">
-                <img src="imagenes/banner.jpg" loading="lazy" decoding="async" alt="Banner Postproducción">
+                <img src="imagenes/banner.jpg" alt="Banner Postproducción">
             </div>
         </div>
     </section>
@@ -1240,7 +1249,7 @@
         }, { threshold: 0.5 });
         if(verticalesSeccion) verticalesObserver.observe(verticalesSeccion);
 
-        // --- FIX YOUTUBE API: Inicialización directa ---
+        // --- YOUTUBE API ---
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
