@@ -740,6 +740,7 @@
             transform: translateY(0) scale(1);
         }
 
+        /* --- MEDIA QUERIES (TABLETS Y LAPTOPS) --- */
         @media (max-width: 900px) {
             .hero-text { text-align: center; }
             .hero h1 { font-size: 2.8rem; }
@@ -757,8 +758,7 @@
             .carrusel-btn.prev { left: 0; }
             .carrusel-btn.next { right: 0; }
 
-            /* Ajuste de Diseño para móviles */
-            .grid-diseno { grid-template-columns: 1fr; }
+            .grid-diseno { grid-template-columns: 1fr; max-width: 400px; }
             .grid-diseno .banner-destacado { grid-column: span 1; }
 
             .arsenal-floating-box {
@@ -767,6 +767,32 @@
                 border-radius: 15px;
             }
             .arsenal-floating-box .titulo-seccion { font-size: 2.2rem; }
+        }
+
+        /* --- NUEVAS MEDIA QUERIES (ESPECÍFICO PARA CELULARES) --- */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.2rem; letter-spacing: -1px; }
+            .hero-subtitle { font-size: 1rem; margin-bottom: 30px; }
+            .titulo-seccion { font-size: 1.8rem; margin-bottom: 30px; }
+            
+            section { padding: 8vh 5vw; }
+            section.seccion-corta { padding: 60px 5vw; }
+            
+            /* Ajustes para el Carrusel Vertical en pantallas pequeñas */
+            .carrusel-vertical-wrapper { height: 500px; }
+            .carrusel-item { width: 240px; }
+            .carrusel-item.siguiente { transform: translateX(55%) scale(0.8) translateZ(-100px); }
+            .carrusel-item.anterior { transform: translateX(-55%) scale(0.8) translateZ(-100px); }
+            .carrusel-btn { width: 40px; height: 40px; font-size: 1rem; }
+            
+            /* Ajustes Lightbox Mobile */
+            .lightbox-cerrar { top: 15px; right: 15px; font-size: 2.5rem; }
+            
+            /* Ajustes Contacto Mobile */
+            .seccion-final p { font-size: 0.95rem; }
+            .redes-sociales { gap: 15px; flex-wrap: wrap; }
+            .redes-sociales a { width: 45px; height: 45px; }
+            .redes-sociales a svg { width: 20px; height: 20px; }
         }
 
     </style>
@@ -942,7 +968,7 @@
         <canvas class="canvas-puntos"></canvas>
         <div style="width: 100%; position: relative; z-index: 2;">
             <h2 class="titulo-seccion animar" style="margin-bottom: 20px;">¿Hablamos?</h2>
-            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas calidad en la edición de tu contenido, cuéntame sobre tu proyecto.</p>
+            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas mejorar la calidad de tu contenido, cuéntame sobre tu proyecto.</p>
             
             <div class="redes-sociales animar">
                 <a href="https://www.instagram.com/4i5ag?igsh=MWk0a2QybHlpdmttMA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
@@ -993,7 +1019,7 @@
         }, { threshold: 0.15 });
         document.querySelectorAll('.animar').forEach((el) => observador.observe(el));
 
-        // --- CANVAS PUNTOS ---
+        // --- CANVAS PUNTOS (CON SOPORTE TÁCTIL) ---
         class EfectoPuntos {
             constructor(canvas) {
                 this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.parent = canvas.parentElement;
@@ -1004,31 +1030,49 @@
 
                 this.resize(); window.addEventListener('resize', () => this.resize());
                 
+                // Eventos de Mouse
                 window.addEventListener('mousemove', (e) => {
                     this.clientX = e.clientX;
                     this.clientY = e.clientY;
-                    const rect = this.canvas.getBoundingClientRect();
-                    this.mouse.x = this.clientX - rect.left; 
-                    this.mouse.y = this.clientY - rect.top;
+                    this.actualizarCoordenadas();
                 });
                 
+                // Eventos Táctiles (Mobile)
+                window.addEventListener('touchstart', (e) => {
+                    this.clientX = e.touches[0].clientX;
+                    this.clientY = e.touches[0].clientY;
+                    this.actualizarCoordenadas();
+                }, {passive: true});
+
+                window.addEventListener('touchmove', (e) => {
+                    this.clientX = e.touches[0].clientX;
+                    this.clientY = e.touches[0].clientY;
+                    this.actualizarCoordenadas();
+                }, {passive: true});
+
                 window.addEventListener('scroll', () => {
                     if(this.clientX !== -1000) {
-                        const rect = this.canvas.getBoundingClientRect();
-                        this.mouse.x = this.clientX - rect.left;
-                        this.mouse.y = this.clientY - rect.top;
+                        this.actualizarCoordenadas();
                     }
-                });
+                }, {passive: true});
 
-                document.addEventListener('mouseleave', () => { 
-                    this.clientX = -1000;
-                    this.clientY = -1000;
-                    this.mouse.x = -1000; 
-                    this.mouse.y = -1000; 
-                });
+                const resetCoordenadas = () => { 
+                    this.clientX = -1000; this.clientY = -1000;
+                    this.mouse.x = -1000; this.mouse.y = -1000; 
+                };
+
+                document.addEventListener('mouseleave', resetCoordenadas);
+                document.addEventListener('touchend', resetCoordenadas);
                 
                 this.animar = this.animar.bind(this); requestAnimationFrame(this.animar);
             }
+
+            actualizarCoordenadas() {
+                const rect = this.canvas.getBoundingClientRect();
+                this.mouse.x = this.clientX - rect.left;
+                this.mouse.y = this.clientY - rect.top;
+            }
+
             resize() { this.canvas.width = this.parent.offsetWidth; this.canvas.height = this.parent.offsetHeight; this.crearPuntos(); }
             crearPuntos() {
                 this.dots = [];
@@ -1077,6 +1121,7 @@
             });
             slider.addEventListener('click', (e) => e.stopPropagation());
             slider.addEventListener('mousedown', (e) => e.stopPropagation());
+            slider.addEventListener('touchstart', (e) => e.stopPropagation(), {passive: true});
         });
 
         // --- LÓGICA CARRUSEL ---
