@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aisag | Postproductor Audiovisual</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    
     <script>
+        /* Bloqueo agresivo para evitar que el navegador recuerde la posición de scroll */
         if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
         if (window.location.hash) { window.history.replaceState(null, null, window.location.pathname); }
         window.scrollTo(0, 0);
@@ -45,11 +42,13 @@
             touch-action: pan-y; 
         }
 
+        /* --- ANIMACIÓN PARA EL PATRÓN DE ROMBOS --- */
         @keyframes scrollRombos {
             0% { background-position: 0 0; }
             100% { background-position: 40px 0; } 
         }
 
+        /* --- BLOQUES CON DISEÑOS DE FONDO --- */
         .bloque-oscuro {
             background-color: #050505;
             position: relative;
@@ -85,6 +84,7 @@
             animation: scrollRombos 3s linear infinite; 
         }
 
+        /* CONFIGURACIÓN MAESTRA DE BLOQUES */
         section {
             padding: 10vh 5vw;
             display: flex;
@@ -97,11 +97,11 @@
         }
 
         .hero-section {
-            min-height: 100vh; 
-            min-height: -webkit-fill-available; 
-            min-height: 100dvh; 
-            padding: 5vh 5vw; 
-            justify-content: center;
+            height: 100vh; 
+            height: 100dvh; 
+            min-height: unset; 
+            padding-top: 0; 
+            padding-bottom: 0;
         }
 
         section.seccion-corta {
@@ -122,6 +122,7 @@
             letter-spacing: -1px;
         }
 
+        /* --- 1. HERO (NEGRO) --- */
         .hero-text {
             max-width: 650px;
             text-align: center;
@@ -190,11 +191,13 @@
             border-radius: 50%; 
             object-fit: cover; 
             filter: grayscale(100%); 
+            
             transform: scale(0.8);
             opacity: 0;
             transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out, filter 0.5s ease, box-shadow 0.5s ease;
         }
 
+        /* --- BOTONES --- */
         .btn {
             display: inline-block;
             padding: 15px 35px;
@@ -214,6 +217,7 @@
             border: 1px solid #fff;
         }
 
+        /* --- 2. DEMO REEL (BLANCO) --- */
         .reel-container {
             width: 100%;
             max-width: 1000px;
@@ -240,6 +244,7 @@
             border: none;
         }
 
+        /* --- 3. PORTAFOLIO / YOUTUBE (NEGRO - 2 COLUMNAS) --- */
         .grid-trabajos {
             display: grid;
             grid-template-columns: repeat(2, 1fr); 
@@ -288,6 +293,7 @@
             margin-top: 10px;
         }
 
+        /* --- 4. FORMATOS VERTICALES (CARRUSEL - BLANCO) --- */
         .carrusel-vertical-wrapper {
             position: relative;
             width: 100%;
@@ -379,6 +385,7 @@
             display: block;
         }
 
+        /* --- BOTONES PLAY/PAUSE --- */
         .custom-video-controls {
             position: absolute;
             top: 50%;
@@ -413,6 +420,7 @@
         .video-vertical-container.is-paused .icon-play { display: block; }
         .video-vertical-container:not(.is-paused) .icon-pause { display: block; }
 
+        /* --- SLIDER DE VOLUMEN VERTICAL SUTIL --- */
         .volume-container {
             position: absolute;
             right: 10px;
@@ -459,6 +467,7 @@
             border: none;
         }
 
+        /* --- FLECHAS CARRUSEL --- */
         .carrusel-btn {
             position: absolute;
             top: 40%;
@@ -498,6 +507,7 @@
             letter-spacing: 1px;
         }
 
+        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS --- */
         .grid-diseno {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -534,6 +544,7 @@
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
         }
 
+        /* --- LIGHTBOX MODAL PARA IMÁGENES --- */
         .lightbox {
             position: fixed;
             top: 0;
@@ -581,6 +592,7 @@
             user-select: none;
         }
 
+        /* --- 6. ARSENAL TÉCNICO (DISEÑO FLOTANTE) --- */
         .skills-list {
             display: flex;
             flex-wrap: wrap;
@@ -631,6 +643,7 @@
             font-size: 3.5rem; 
         }
 
+        /* --- 7. CONTACTO (NEGRO) --- */
         .seccion-final {
             text-align: center;
         }
@@ -666,6 +679,7 @@
             fill: currentColor;
         }
 
+        /* --- ANIMACIONES DE SCROLL --- */
         .animar {
             opacity: 0;
             transform: translateY(60px) scale(0.97);
@@ -676,7 +690,7 @@
             transform: translateY(0) scale(1);
         }
 
-        /* --- HOVER SOLO A COMPUTADORAS --- */
+        /* --- RESTRINGIR EFECTOS HOVER SOLO A COMPUTADORAS --- */
         @media (hover: hover) {
             .hero-imagen:hover {
                 filter: grayscale(0%);
@@ -739,7 +753,7 @@
             }
         }
 
-        /* --- MEDIA QUERIES --- */
+        /* --- MEDIA QUERIES (TABLETS Y LAPTOPS) --- */
         @media (max-width: 900px) {
             .hero-text { text-align: center; }
             .hero h1 { font-size: 2.8rem; }
@@ -769,6 +783,7 @@
             .arsenal-floating-box .titulo-seccion { font-size: 2.2rem; }
         }
 
+        /* --- NUEVAS MEDIA QUERIES (ESPECÍFICO PARA CELULARES) --- */
         @media (max-width: 600px) {
             .hero-imagen { max-width: 150px; margin-bottom: 20px; }
             .hero h1 { font-size: 2.2rem; letter-spacing: -1px; margin-bottom: 5px; }
@@ -798,7 +813,9 @@
             .hero-imagen { max-width: 120px; }
             .hero h1 { font-size: 1.8rem; }
         }
+
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -810,7 +827,7 @@
     <section class="bloque-oscuro hero-section">
         <canvas class="canvas-puntos"></canvas>
         <div class="hero-imagen-container">
-            <img src="https://yt3.googleusercontent.com/xqL0mIxIwU0ltc3SIStedzqtyxtDmx076HP2GtYqKP8A-zqBOxOYWrsYDpjPHXR4ejB1XZqrDhg=s160-c-k-c0x00ffffff-no-rj" fetchpriority="high" alt="Foto de Perfil" class="hero-imagen" id="img-hero">
+            <img src="https://yt3.googleusercontent.com/xqL0mIxIwU0ltc3SIStedzqtyxtDmx076HP2GtYqKP8A-zqBOxOYWrsYDpjPHXR4ejB1XZqrDhg=s160-c-k-c0x00ffffff-no-rj" alt="Foto de Perfil" class="hero-imagen" id="img-hero">
         </div>
         <div class="hero-text">
             <span class="hero-presentacion fade-arriba" id="txt-pres">¡Hola, soy Aisag!</span>
@@ -829,7 +846,7 @@
         <h2 class="titulo-seccion animar">Demo Reel</h2>
         <div class="reel-container animar">
             <div class="reel-wrapper">
-                <iframe id="reel-video" loading="lazy" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe id="reel-video" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -841,7 +858,7 @@
             
             <div class="trabajo-item animar destacado">
                 <div class="video-container">
-                    <iframe loading="lazy" src="https://www.youtube.com/embed/s0aTdQXtPkw?si=kyBD9tJthFV4p7vj" allowfullscreen></iframe>
+                    <iframe loading="lazy" src="https://www.youtube.com/embed/s0aTdQXtPkw?si=kyBD9tJthFV4p7vj&playsinline=1" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
                     <p>Motion Graphics | Transiciones | Efectos de sonido | Doblaje</p>
@@ -850,7 +867,7 @@
             
             <div class="trabajo-item animar">
                 <div class="video-container">
-                    <iframe loading="lazy" src="https://www.youtube.com/embed/QflkDmKh-lw?si=621f7B2gjR4BrHLs" allowfullscreen></iframe>
+                    <iframe loading="lazy" src="https://www.youtube.com/embed/QflkDmKh-lw?si=621f7B2gjR4BrHLs&playsinline=1" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
                     <p>Ritmo Frenético | Memes | Tracking y animación de Textos</p>
@@ -859,7 +876,7 @@
             
             <div class="trabajo-item animar">
                 <div class="video-container">
-                    <iframe loading="lazy" src="https://www.youtube.com/embed/a-jmu_ThYjI?si=PvSaUZKe8lV7QegL" allowfullscreen></iframe>
+                    <iframe loading="lazy" src="https://www.youtube.com/embed/a-jmu_ThYjI?si=PvSaUZKe8lV7QegL&playsinline=1" allowfullscreen></iframe>
                 </div>
                 <div class="trabajo-info">
                     <p>Motion Graphics | Transiciones | Efectos de sonido | Doblaje | Narrativa</p>
@@ -877,7 +894,7 @@
                 
                 <div class="carrusel-item activo">
                     <div class="video-vertical-container">
-                        <video src="videos/tiktok1.mp4" loop muted playsinline preload="metadata"></video>
+                        <video src="videos/tiktok1.mp4" loop muted playsinline preload="auto"></video>
                         <div class="custom-video-controls">
                             <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
@@ -937,11 +954,11 @@
         
         <div class="grid-diseno">
             <div class="item-grafico animar" onclick="abrirLightbox(this)">
-                <img src="imagenes/miniatura-1.jpg" loading="lazy" decoding="async" alt="Miniatura YouTube">
+                <img src="imagenes/miniatura-1.jpg" alt="Miniatura YouTube">
             </div>
 
             <div class="item-grafico animar" onclick="abrirLightbox(this)">
-                <img src="imagenes/poster-veintialgo.jpg" loading="lazy" decoding="async" alt="Póster Veintialgo">
+                <img src="imagenes/poster-veintialgo.jpg" alt="Póster Veintialgo">
             </div>
 
             <div class="item-grafico animar banner-destacado" onclick="abrirLightbox(this)">
@@ -1025,7 +1042,6 @@
             constructor(canvas) {
                 this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.parent = canvas.parentElement;
                 this.dots = []; 
-                // OPTIMIZACIÓN 5: Menos puntos en móviles para no quemar la batería/CPU
                 this.isMobile = window.innerWidth <= 600;
                 this.spacing = this.isMobile ? 35 : 26; 
                 this.mouse = { x: -1000, y: -1000 }; 
@@ -1224,13 +1240,11 @@
         }, { threshold: 0.5 });
         if(verticalesSeccion) verticalesObserver.observe(verticalesSeccion);
 
-        // --- OPTIMIZACIÓN YOUTUBE API: Carga diferida ---
-        setTimeout(() => {
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }, 1500); // 1.5s delay para que el Hero cargue primero
+        // --- FIX YOUTUBE API: Inicialización directa ---
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var playerReel;
 
