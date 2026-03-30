@@ -268,7 +268,7 @@
             margin-bottom: 25px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border: 2px solid #fff; 
-            box-shadow: 0 0 0 transparent; /* Base sin sombra */
+            box-shadow: 0 0 0 transparent; 
         }
 
         .video-container iframe {
@@ -280,7 +280,6 @@
             border: none;
         }
 
-        /* NUEVO EFECTO HOVER: Elevación suave y resplandor sutil */
         .video-container:hover {
             transform: translateY(-8px); 
             box-shadow: 0 15px 30px rgba(255, 255, 255, 0.15); 
@@ -529,79 +528,51 @@
             letter-spacing: 1px;
         }
 
-        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS (NEGRO) --- */
-        .masonry-grafica {
-            column-count: 2; 
-            column-gap: 40px;
+        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS (GRID MANUAL NUEVO) --- */
+        .grid-diseno {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
             width: 100%;
-            max-width: 900px; 
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
-        .item-grafico {
-            break-inside: avoid;
-            margin-bottom: 40px;
+        .grid-diseno .item-grafico {
+            margin-bottom: 0; 
             position: relative;
             width: 100%;
             background-color: #000;
             border: 2px solid #fff; 
-            box-shadow: 0 0 0 transparent; /* Base sin sombra */
+            box-shadow: 0 0 0 transparent; 
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
             overflow: hidden;
-            display: inline-block; 
+            display: flex;
         }
 
-        .item-grafico img {
+        .grid-diseno .banner-destacado {
+            grid-column: span 2; 
+        }
+
+        .grid-diseno .item-grafico img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
         }
 
-        /* NUEVO EFECTO HOVER: Elevación suave y resplandor sutil (igual que videos) */
-        .item-grafico:hover {
+        .grid-diseno .item-grafico:hover {
             transform: translateY(-8px); 
             box-shadow: 0 15px 30px rgba(255, 255, 255, 0.15); 
         }
 
-        .item-grafico:hover img {
+        .grid-diseno .item-grafico:hover img {
             transform: scale(1.03);
             filter: brightness(1.1);
-        }
-
-        .overlay-grafico {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 40px 20px 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
-            color: #fff;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-
-        .item-grafico:hover .overlay-grafico {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .overlay-grafico h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: #fff;
-        }
-
-        .overlay-grafico p {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: #bbb;
-            letter-spacing: 1px;
         }
 
         /* --- LIGHTBOX MODAL PARA IMÁGENES --- */
@@ -786,8 +757,9 @@
             .carrusel-btn.prev { left: 0; }
             .carrusel-btn.next { right: 0; }
 
-            .masonry-grafica { column-count: 2; column-gap: 20px; }
-            .item-grafico { margin-bottom: 20px; box-shadow: 10px 10px 0px #fff; }
+            /* Ajuste de Diseño para móviles */
+            .grid-diseno { grid-template-columns: 1fr; }
+            .grid-diseno .banner-destacado { grid-column: span 1; }
 
             .arsenal-floating-box {
                 max-width: 90%;
@@ -797,9 +769,6 @@
             .arsenal-floating-box .titulo-seccion { font-size: 2.2rem; }
         }
 
-        @media (max-width: 600px) {
-            .masonry-grafica { column-count: 1; }
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -938,7 +907,7 @@
         <canvas class="canvas-puntos"></canvas>
         <h2 class="titulo-seccion animar">Diseño y Miniaturas</h2>
         
-        <div class="masonry-grafica">
+        <div class="grid-diseno">
             <div class="item-grafico animar" onclick="abrirLightbox(this)">
                 <img src="imagenes/miniatura-1.jpg" alt="Miniatura YouTube">
             </div>
@@ -946,12 +915,11 @@
             <div class="item-grafico animar" onclick="abrirLightbox(this)">
                 <img src="imagenes/poster-veintialgo.jpg" alt="Póster Veintialgo">
             </div>
-        </div>
 
-        <div class="item-grafico animar" onclick="abrirLightbox(this)" style="display: block; width: 100%; max-width: 900px; margin: 0 auto 40px auto;">
-            <img src="imagenes/banner.jpg" alt="Banner Postproducción">
+            <div class="item-grafico animar banner-destacado" onclick="abrirLightbox(this)">
+                <img src="imagenes/banner.jpg" alt="Banner Postproducción">
+            </div>
         </div>
-
     </section>
 
     <section id="arsenal" class="bloque-oscuro seccion-corta"> 
@@ -974,7 +942,7 @@
         <canvas class="canvas-puntos"></canvas>
         <div style="width: 100%; position: relative; z-index: 2;">
             <h2 class="titulo-seccion animar" style="margin-bottom: 20px;">¿Hablamos?</h2>
-            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas llevar la postproducción a un estándar profesional, cuéntame sobre tu proyecto.</p>
+            <p class="animar" style="margin-bottom: 50px; font-size: 1.1rem; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">Si buscas calidad en la edición de tu contenido, cuéntame sobre tu proyecto.</p>
             
             <div class="redes-sociales animar">
                 <a href="https://www.instagram.com/4i5ag?igsh=MWk0a2QybHlpdmttMA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
