@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aisag | Postproductor Audiovisual</title>
+    
+    <script>
+        if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    </script>
+
     <style>
         /* --- VARIABLES Y RESET --- */
         :root {
@@ -14,19 +20,25 @@
             --transition-main: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth;
         }
 
+        /* FIX 2: Bloqueo de movimiento horizontal */
         body {
             font-family: var(--font-main);
             background-color: #000;
             color: var(--text-main);
             overflow-x: hidden;
+            width: 100%;
             position: relative;
+            touch-action: pan-y; /* Obliga a que el scroll táctil solo sea vertical */
         }
 
         /* --- ANIMACIÓN PARA EL PATRÓN DE ROMBOS --- */
@@ -80,11 +92,18 @@
             justify-content: center;
             min-height: 100vh;
             width: 100%;
+            overflow: hidden; /* Evita desbordes horizontales por bloque */
         }
 
         section.seccion-corta {
             min-height: auto;
             padding: 120px 5vw;
+        }
+
+        /* FIX 3: Ajuste de altura perfecta para el primer bloque en celular */
+        .hero-section {
+            min-height: 100vh;
+            min-height: 100dvh; /* Altura dinámica que respeta la barra de navegación del celular */
         }
 
         .titulo-seccion {
@@ -174,12 +193,6 @@
             opacity: 0;
             transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out, filter 0.5s ease, box-shadow 0.5s ease;
         }
-        
-        .hero-imagen:hover {
-            filter: grayscale(0%);
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.15); 
-        }
 
         /* --- BOTONES --- */
         .btn {
@@ -200,13 +213,6 @@
             background-color: #fff;
             border: 1px solid #fff;
         }
-        
-        .btn-oscuro:hover {
-            background-color: #000;
-            color: #fff;
-            border-color: #fff;
-            box-shadow: 0 0 15px var(--neon-glow-subtle); 
-        }
 
         /* --- 2. DEMO REEL (BLANCO) --- */
         .reel-container {
@@ -224,11 +230,6 @@
             border: 2px solid #000;
             box-shadow: 15px 15px 0px #000; 
             transition: all 0.4s ease;
-        }
-
-        .reel-wrapper:hover {
-            transform: translate(-5px, -5px); 
-            box-shadow: 20px 20px 0px #000; 
         }
 
         .reel-wrapper iframe {
@@ -278,11 +279,6 @@
             width: 100%;
             height: 100%;
             border: none;
-        }
-
-        .video-container:hover {
-            transform: translateY(-8px); 
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.15); 
         }
 
         .trabajo-info p {
@@ -407,11 +403,6 @@
             z-index: 10;
         }
 
-        .carrusel-item.activo .video-vertical-container:hover .custom-video-controls {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
         .video-vertical-container.is-paused .custom-video-controls {
             opacity: 1;
         }
@@ -440,10 +431,6 @@
             z-index: 11;
         }
 
-        .carrusel-item.activo .video-vertical-container:hover .volume-container {
-            opacity: 1;
-        }
-
         .volume-slider {
             -webkit-appearance: none;
             width: 80px; 
@@ -465,10 +452,6 @@
             cursor: pointer;
             box-shadow: 0 0 5px rgba(0,0,0,0.5);
             transition: transform 0.1s ease;
-        }
-
-        .volume-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.3);
         }
         
         .volume-slider::-moz-range-thumb {
@@ -503,13 +486,6 @@
             align-items: center;
         }
 
-        .carrusel-btn:hover {
-            background: #000;
-            color: #fff;
-            box-shadow: 0px 0px 0px transparent;
-            transform: translateY(-45%);
-        }
-
         .carrusel-btn.prev { left: 10%; }
         .carrusel-btn.next { right: 10%; }
 
@@ -528,7 +504,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS (GRID MANUAL NUEVO) --- */
+        /* --- 5. DISEÑO GRÁFICO Y MINIATURAS (GRID MANUAL) --- */
         .grid-diseno {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -563,16 +539,6 @@
             object-fit: cover;
             display: block;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
-        }
-
-        .grid-diseno .item-grafico:hover {
-            transform: translateY(-8px); 
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.15); 
-        }
-
-        .grid-diseno .item-grafico:hover img {
-            transform: scale(1.03);
-            filter: brightness(1.1);
         }
 
         /* --- LIGHTBOX MODAL PARA IMÁGENES --- */
@@ -623,10 +589,6 @@
             user-select: none;
         }
 
-        .lightbox-cerrar:hover {
-            transform: scale(1.2);
-        }
-
         /* --- 6. ARSENAL TÉCNICO (DISEÑO FLOTANTE) --- */
         .skills-list {
             display: flex;
@@ -649,14 +611,6 @@
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        .skill-tag-arsenal:hover {
-            border-color: #000;
-            color: #000;
-            background-color: #ffffff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-            transform: translateY(-3px); 
-        }
-
         .arsenal-floating-box {
             background-color: #fff; 
             background-image: 
@@ -722,12 +676,6 @@
             fill: currentColor;
         }
 
-        .redes-sociales a:hover {
-            background-color: #fff;
-            color: #000; 
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255,255,255,0.15);
-        }
 
         /* --- ANIMACIONES DE SCROLL --- */
         .animar {
@@ -738,6 +686,74 @@
         .animar.visible {
             opacity: 1;
             transform: translateY(0) scale(1);
+        }
+
+        /* FIX 4: RESTRINGIR EFECTOS HOVER SOLO A COMPUTADORAS (Desactiva el "pop-up trabado" en móviles) */
+        @media (hover: hover) {
+            .hero-imagen:hover {
+                filter: grayscale(0%);
+                transform: scale(1.05) !important;
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.15); 
+            }
+            .btn-oscuro:hover {
+                background-color: #000;
+                color: #fff;
+                border-color: #fff;
+                box-shadow: 0 0 15px var(--neon-glow-subtle); 
+            }
+            .btn-claro:hover {
+                background-color: #fff; 
+                color: #000;
+                box-shadow: 0 0 15px rgba(0,0,0,0.15); 
+            }
+            .reel-wrapper:hover {
+                transform: translate(-5px, -5px); 
+                box-shadow: 20px 20px 0px #000; 
+            }
+            .video-container:hover {
+                transform: translateY(-8px); 
+                box-shadow: 0 15px 30px rgba(255, 255, 255, 0.15); 
+            }
+            .carrusel-item.activo .video-vertical-container:hover .custom-video-controls {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            .carrusel-item.activo .video-vertical-container:hover .volume-container {
+                opacity: 1;
+            }
+            .volume-slider::-webkit-slider-thumb:hover {
+                transform: scale(1.3);
+            }
+            .carrusel-btn:hover {
+                background: #000;
+                color: #fff;
+                box-shadow: 0px 0px 0px transparent;
+                transform: translateY(-45%);
+            }
+            .grid-diseno .item-grafico:hover {
+                transform: translateY(-8px); 
+                box-shadow: 0 15px 30px rgba(255, 255, 255, 0.15); 
+            }
+            .grid-diseno .item-grafico:hover img {
+                transform: scale(1.03);
+                filter: brightness(1.1);
+            }
+            .lightbox-cerrar:hover {
+                transform: scale(1.2);
+            }
+            .skill-tag-arsenal:hover {
+                border-color: #000;
+                color: #000;
+                background-color: #ffffff;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+                transform: translateY(-3px); 
+            }
+            .redes-sociales a:hover {
+                background-color: #fff;
+                color: #000; 
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(255,255,255,0.15);
+            }
         }
 
         /* --- MEDIA QUERIES (TABLETS Y LAPTOPS) --- */
@@ -778,17 +794,14 @@
             section { padding: 8vh 5vw; }
             section.seccion-corta { padding: 60px 5vw; }
             
-            /* Ajustes para el Carrusel Vertical en pantallas pequeñas */
             .carrusel-vertical-wrapper { height: 500px; }
             .carrusel-item { width: 240px; }
             .carrusel-item.siguiente { transform: translateX(55%) scale(0.8) translateZ(-100px); }
             .carrusel-item.anterior { transform: translateX(-55%) scale(0.8) translateZ(-100px); }
             .carrusel-btn { width: 40px; height: 40px; font-size: 1rem; }
             
-            /* Ajustes Lightbox Mobile */
             .lightbox-cerrar { top: 15px; right: 15px; font-size: 2.5rem; }
             
-            /* Ajustes Contacto Mobile */
             .seccion-final p { font-size: 0.95rem; }
             .redes-sociales { gap: 15px; flex-wrap: wrap; }
             .redes-sociales a { width: 45px; height: 45px; }
@@ -805,7 +818,7 @@
         <img id="lightbox-img" src="" alt="Vista ampliada">
     </div>
 
-    <section class="bloque-oscuro">
+    <section class="bloque-oscuro hero-section">
         <canvas class="canvas-puntos"></canvas>
         <div class="hero-imagen-container">
             <img src="https://yt3.googleusercontent.com/xqL0mIxIwU0ltc3SIStedzqtyxtDmx076HP2GtYqKP8A-zqBOxOYWrsYDpjPHXR4ejB1XZqrDhg=s160-c-k-c0x00ffffff-no-rj" alt="Foto de Perfil" class="hero-imagen" id="img-hero">
@@ -989,12 +1002,8 @@
 
     <script>
         // --- PREVENCIÓN DEL SALTO DE SCROLL ---
-        if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
-        window.scrollTo(0, 0);
-
-        // --- ANIMACIÓN HERO ---
         window.onload = () => {
-            setTimeout(() => window.scrollTo(0, 0), 10);
+            // El scroll a tope se maneja en el head, pero reforzamos animaciones aquí
             setTimeout(() => {
                 const img = document.getElementById('img-hero');
                 if(img) { img.style.opacity = '1'; img.style.transform = 'scale(1)'; }
@@ -1019,7 +1028,7 @@
         }, { threshold: 0.15 });
         document.querySelectorAll('.animar').forEach((el) => observador.observe(el));
 
-        // --- CANVAS PUNTOS (CON SOPORTE TÁCTIL) ---
+        // --- CANVAS PUNTOS ---
         class EfectoPuntos {
             constructor(canvas) {
                 this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.parent = canvas.parentElement;
@@ -1030,49 +1039,48 @@
 
                 this.resize(); window.addEventListener('resize', () => this.resize());
                 
-                // Eventos de Mouse
                 window.addEventListener('mousemove', (e) => {
                     this.clientX = e.clientX;
                     this.clientY = e.clientY;
-                    this.actualizarCoordenadas();
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.mouse.x = this.clientX - rect.left; 
+                    this.mouse.y = this.clientY - rect.top;
                 });
-                
-                // Eventos Táctiles (Mobile)
+
+                // Solo para tracking, sin interferir con el scroll vertical
                 window.addEventListener('touchstart', (e) => {
                     this.clientX = e.touches[0].clientX;
                     this.clientY = e.touches[0].clientY;
-                    this.actualizarCoordenadas();
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.mouse.x = this.clientX - rect.left; 
+                    this.mouse.y = this.clientY - rect.top;
                 }, {passive: true});
 
                 window.addEventListener('touchmove', (e) => {
                     this.clientX = e.touches[0].clientX;
                     this.clientY = e.touches[0].clientY;
-                    this.actualizarCoordenadas();
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.mouse.x = this.clientX - rect.left; 
+                    this.mouse.y = this.clientY - rect.top;
                 }, {passive: true});
-
+                
                 window.addEventListener('scroll', () => {
                     if(this.clientX !== -1000) {
-                        this.actualizarCoordenadas();
+                        const rect = this.canvas.getBoundingClientRect();
+                        this.mouse.x = this.clientX - rect.left;
+                        this.mouse.y = this.clientY - rect.top;
                     }
                 }, {passive: true});
 
-                const resetCoordenadas = () => { 
-                    this.clientX = -1000; this.clientY = -1000;
-                    this.mouse.x = -1000; this.mouse.y = -1000; 
-                };
-
-                document.addEventListener('mouseleave', resetCoordenadas);
-                document.addEventListener('touchend', resetCoordenadas);
+                document.addEventListener('mouseleave', () => { 
+                    this.clientX = -1000;
+                    this.clientY = -1000;
+                    this.mouse.x = -1000; 
+                    this.mouse.y = -1000; 
+                });
                 
                 this.animar = this.animar.bind(this); requestAnimationFrame(this.animar);
             }
-
-            actualizarCoordenadas() {
-                const rect = this.canvas.getBoundingClientRect();
-                this.mouse.x = this.clientX - rect.left;
-                this.mouse.y = this.clientY - rect.top;
-            }
-
             resize() { this.canvas.width = this.parent.offsetWidth; this.canvas.height = this.parent.offsetHeight; this.crearPuntos(); }
             crearPuntos() {
                 this.dots = [];
