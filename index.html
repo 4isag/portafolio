@@ -68,7 +68,7 @@
             color: var(--text-dark);
             position: relative;
             box-shadow: inset 0 20px 50px rgba(0,0,0,0.1); 
-            animation: scrollRombos 15s linear infinite; 
+            animation: scrollRombos 3s linear infinite; /* Restaurado a 3s para buen dinamismo */
         }
 
         /* CONFIGURACIÓN MAESTRA DE BLOQUES */
@@ -397,7 +397,7 @@
             display: block;
         }
 
-        /* --- BOTONES PLAY/PAUSE (UX MEJORADO) --- */
+        /* --- BOTONES PLAY/PAUSE --- */
         .custom-video-controls {
             position: absolute;
             top: 50%;
@@ -437,6 +437,63 @@
         .video-vertical-container.is-paused .icon-play { display: block; }
         .video-vertical-container:not(.is-paused) .icon-pause { display: block; }
 
+        /* --- NUEVO: SLIDER DE VOLUMEN VERTICAL SUTIL --- */
+        .volume-container {
+            position: absolute;
+            right: 10px;
+            bottom: 40px; /* Separado del borde inferior */
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 11;
+        }
+
+        .carrusel-item.activo .video-vertical-container:hover .volume-container {
+            opacity: 1;
+        }
+
+        /* Hack de CSS para hacer vertical un input range */
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 80px; /* Esto se convierte en la altura por la rotación */
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+            transform: rotate(-90deg);
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+        }
+        
+        .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            border: none;
+        }
+
+        /* --- FLECHAS CARRUSEL --- */
         .carrusel-btn {
             position: absolute;
             top: 40%;
@@ -606,7 +663,7 @@
             border: 1px solid rgba(255,255,255,0.1); 
             position: relative;
             z-index: 2;
-            animation: scrollRombos 15s linear infinite; 
+            animation: scrollRombos 3s linear infinite; /* Restaurado a 3s */
         }
 
         .arsenal-floating-box .titulo-seccion {
@@ -780,6 +837,9 @@
                             <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                         </div>
+                        <div class="volume-container">
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.15">
+                        </div>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Memes</h3>
@@ -794,6 +854,9 @@
                             <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                         </div>
+                        <div class="volume-container">
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.15">
+                        </div>
                     </div>
                     <div class="trabajo-info-claro">
                         <h3>Historias</h3>
@@ -807,6 +870,9 @@
                         <div class="custom-video-controls">
                             <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </div>
+                        <div class="volume-container">
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="0.15">
                         </div>
                     </div>
                     <div class="trabajo-info-claro">
@@ -888,7 +954,7 @@
                     <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
                 <a href="https://discord.com/users/399394358379544576" target="_blank" rel="noopener noreferrer" aria-label="Discord"> 
-                    <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286M8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
                 </a>
                 <a href="https://x.com/4isag" target="_blank" rel="noopener noreferrer" aria-label="X">
                     <svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
@@ -920,6 +986,11 @@
                     setTimeout(() => { if(el){ el.style.opacity = '1'; el.style.transform = 'translateY(0)'; } }, index * 150); 
                 });
             }, 600);
+            
+            // Set default volume for TikTok videos
+            document.querySelectorAll('.video-vertical-container video').forEach(vid => {
+                vid.volume = 0.15;
+            });
         };
 
         // --- INTERSECTION OBSERVER ---
@@ -995,7 +1066,6 @@
         // --- AUTOPLAY Y SONIDO GLOBALES ---
         let interactionUnlocked = false;
 
-        // Desbloqueamos el sonido en el primer click en cualquier parte de la web
         document.addEventListener('click', () => {
             interactionUnlocked = true;
             const activeVideo = document.querySelector('.carrusel-item.activo video');
@@ -1004,12 +1074,24 @@
             }
         }, { once: true });
 
+        // --- SLIDER DE VOLUMEN (LÓGICA) ---
+        const sliders = document.querySelectorAll('.volume-slider');
+        sliders.forEach(slider => {
+            // Actualizar volumen del video
+            slider.addEventListener('input', (e) => {
+                const video = e.target.closest('.video-vertical-container').querySelector('video');
+                if (video) video.volume = e.target.value;
+            });
+            // Evitar que hacer clic en el slider pause el video
+            slider.addEventListener('click', (e) => e.stopPropagation());
+            slider.addEventListener('mousedown', (e) => e.stopPropagation());
+        });
+
         // --- LÓGICA CARRUSEL ---
         const track = document.getElementById('track-vertical');
         const items = Array.from(track.children);
         let currentIndex = 0;
 
-        // Función para reproducir manejando el sonido
         function playVideoWithSound(video, container) {
             if(interactionUnlocked) {
                 video.muted = false;
@@ -1017,7 +1099,6 @@
             video.play().then(() => {
                 if(container) container.classList.remove('is-paused');
             }).catch(e => {
-                // Fallback si el navegador sigue bloqueando
                 video.muted = true;
                 video.play().catch(err => {});
             });
@@ -1060,7 +1141,6 @@
                     const video = item.querySelector('video');
                     const container = item.querySelector('.video-vertical-container');
                     if(video) {
-                        // Si está muteado (por fallback), el click le da sonido
                         if (video.muted) {
                             video.muted = false;
                             interactionUnlocked = true;
