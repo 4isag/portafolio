@@ -68,7 +68,7 @@
             color: var(--text-dark);
             position: relative;
             box-shadow: inset 0 20px 50px rgba(0,0,0,0.1); 
-            animation: scrollRombos 3s linear infinite; /* Restaurado a 3s para buen dinamismo */
+            animation: scrollRombos 15s linear infinite; 
         }
 
         /* CONFIGURACIÓN MAESTRA DE BLOQUES */
@@ -206,17 +206,6 @@
             color: #fff;
             border-color: #fff;
             box-shadow: 0 0 15px var(--neon-glow-subtle); 
-        }
-
-        .btn-claro {
-            color: #fff;
-            background-color: #000;
-            border: 1px solid #000;
-        }
-        .btn-claro:hover {
-            background-color: #fff; 
-            color: #000;
-            box-shadow: 0 0 15px rgba(0,0,0,0.15); 
         }
 
         /* --- 2. DEMO REEL (BLANCO) --- */
@@ -437,11 +426,11 @@
         .video-vertical-container.is-paused .icon-play { display: block; }
         .video-vertical-container:not(.is-paused) .icon-pause { display: block; }
 
-        /* --- NUEVO: SLIDER DE VOLUMEN VERTICAL SUTIL --- */
+        /* --- SLIDER DE VOLUMEN VERTICAL SUTIL --- */
         .volume-container {
             position: absolute;
             right: 10px;
-            bottom: 40px; /* Separado del borde inferior */
+            bottom: 40px; 
             height: 80px;
             display: flex;
             align-items: center;
@@ -455,10 +444,9 @@
             opacity: 1;
         }
 
-        /* Hack de CSS para hacer vertical un input range */
         .volume-slider {
             -webkit-appearance: none;
-            width: 80px; /* Esto se convierte en la altura por la rotación */
+            width: 80px; 
             height: 4px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 2px;
@@ -542,10 +530,10 @@
 
         /* --- 5. DISEÑO GRÁFICO Y MINIATURAS (NEGRO) --- */
         .masonry-grafica {
-            column-count: 3;
+            column-count: 2; /* Bajado a 2 para acomodar mejor las imágenes */
             column-gap: 40px;
             width: 100%;
-            max-width: 1100px;
+            max-width: 900px; /* Un poco más estrecho para centrar 2 imágenes */
         }
 
         .item-grafico {
@@ -565,52 +553,70 @@
         .item-grafico img {
             width: 100%;
             display: block;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
         }
 
+        /* Efecto Hover limpio: solo levanta la caja y da brillo a la imagen */
         .item-grafico:hover {
             transform: translate(-5px, -5px); 
             box-shadow: 20px 20px 0px #fff; 
         }
 
         .item-grafico:hover img {
-            transform: scale(1.05);
+            transform: scale(1.02);
+            filter: brightness(1.1);
         }
 
-        .overlay-grafico {
-            position: absolute;
-            bottom: 0;
+        /* --- LIGHTBOX MODAL PARA IMÁGENES --- */
+        .lightbox {
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
-            padding: 40px 20px 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
-            color: #fff;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .item-grafico:hover .overlay-grafico {
+        .lightbox.activo {
             opacity: 1;
-            transform: translateY(0);
+            pointer-events: auto;
         }
 
-        .overlay-grafico h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 5px;
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            object-fit: contain;
+        }
+
+        .lightbox.activo img {
+            transform: scale(1);
+        }
+
+        .lightbox-cerrar {
+            position: absolute;
+            top: 30px;
+            right: 40px;
             color: #fff;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            user-select: none;
         }
 
-        .overlay-grafico p {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: #bbb;
-            letter-spacing: 1px;
+        .lightbox-cerrar:hover {
+            transform: scale(1.2);
         }
 
         /* --- 6. ARSENAL TÉCNICO (DISEÑO FLOTANTE) --- */
@@ -663,7 +669,7 @@
             border: 1px solid rgba(255,255,255,0.1); 
             position: relative;
             z-index: 2;
-            animation: scrollRombos 3s linear infinite; /* Restaurado a 3s */
+            animation: scrollRombos 3s linear infinite; 
         }
 
         .arsenal-floating-box .titulo-seccion {
@@ -761,6 +767,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <div id="lightbox" class="lightbox" onclick="cerrarLightbox()">
+        <span class="lightbox-cerrar">&times;</span>
+        <img id="lightbox-img" src="" alt="Vista ampliada">
+    </div>
 
     <section class="bloque-oscuro">
         <canvas class="canvas-puntos"></canvas>
@@ -892,20 +903,12 @@
         
         <div class="masonry-grafica">
             
-            <div class="item-grafico animar">
+            <div class="item-grafico animar" onclick="abrirLightbox(this)">
                 <img src="imagenes/miniatura-1.jpg" alt="Miniatura YouTube">
-                <div class="overlay-grafico">
-                    <h3>Miniatura YouTube</h3>
-                    <p>Composición Dinámica | Retención</p>
-                </div>
             </div>
 
-            <div class="item-grafico animar">
+            <div class="item-grafico animar" onclick="abrirLightbox(this)">
                 <img src="imagenes/poster-veintialgo.jpg" alt="Póster Veintialgo">
-                <div class="overlay-grafico">
-                    <h3>Póster "Veintialgo"</h3>
-                    <p>Diseño Editorial | Cortometraje</p>
-                </div>
             </div>
 
         </div>
@@ -971,7 +974,6 @@
                 });
             }, 600);
             
-            // Set default volume for TikTok videos
             document.querySelectorAll('.video-vertical-container video').forEach(vid => {
                 vid.volume = 0.15;
             });
@@ -1058,15 +1060,13 @@
             }
         }, { once: true });
 
-        // --- SLIDER DE VOLUMEN (LÓGICA) ---
+        // --- SLIDER DE VOLUMEN ---
         const sliders = document.querySelectorAll('.volume-slider');
         sliders.forEach(slider => {
-            // Actualizar volumen del video
             slider.addEventListener('input', (e) => {
                 const video = e.target.closest('.video-vertical-container').querySelector('video');
                 if (video) video.volume = e.target.value;
             });
-            // Evitar que hacer clic en el slider pause el video
             slider.addEventListener('click', (e) => e.stopPropagation());
             slider.addEventListener('mousedown', (e) => e.stopPropagation());
         });
@@ -1207,6 +1207,24 @@
 
             videoObserver.observe(document.getElementById('reel'));
         }
+
+        // --- LÓGICA LIGHTBOX ---
+        function abrirLightbox(elemento) {
+            const imgSrc = elemento.querySelector('img').src;
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            
+            lightboxImg.src = imgSrc;
+            lightbox.classList.add('activo');
+        }
+
+        function cerrarLightbox() {
+            document.getElementById('lightbox').classList.remove('activo');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') cerrarLightbox();
+        });
     </script>
 </body>
 </html>
