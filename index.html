@@ -423,7 +423,6 @@
             transform: translate(-50%, -50%) scale(1.1);
         }
 
-        /* Mantiene el botón visible si está pausado */
         .video-vertical-container.is-paused .custom-video-controls {
             opacity: 1;
         }
@@ -435,7 +434,6 @@
             display: none;
         }
 
-        /* Lógica visual Play/Pause */
         .video-vertical-container.is-paused .icon-play { display: block; }
         .video-vertical-container:not(.is-paused) .icon-pause { display: block; }
 
@@ -994,10 +992,36 @@
         }
         document.querySelectorAll('.canvas-puntos').forEach(canvas => new EfectoPuntos(canvas));
 
+        // --- AUTOPLAY Y SONIDO GLOBALES ---
+        let interactionUnlocked = false;
+
+        // Desbloqueamos el sonido en el primer click en cualquier parte de la web
+        document.addEventListener('click', () => {
+            interactionUnlocked = true;
+            const activeVideo = document.querySelector('.carrusel-item.activo video');
+            if (activeVideo && activeVideo.muted) {
+                activeVideo.muted = false;
+            }
+        }, { once: true });
+
         // --- LÓGICA CARRUSEL ---
         const track = document.getElementById('track-vertical');
         const items = Array.from(track.children);
         let currentIndex = 0;
+
+        // Función para reproducir manejando el sonido
+        function playVideoWithSound(video, container) {
+            if(interactionUnlocked) {
+                video.muted = false;
+            }
+            video.play().then(() => {
+                if(container) container.classList.remove('is-paused');
+            }).catch(e => {
+                // Fallback si el navegador sigue bloqueando
+                video.muted = true;
+                video.play().catch(err => {});
+            });
+        }
 
         function actualizarCarrusel() {
             items.forEach((item, index) => {
@@ -1007,11 +1031,7 @@
                 
                 if (index === currentIndex) { 
                     item.classList.add('activo'); 
-                    if(video) {
-                        video.play().then(() => {
-                            if(container) container.classList.remove('is-paused');
-                        }).catch(e => {}); 
-                    }
+                    if(video) playVideoWithSound(video, container);
                 } else {
                     if (index === (currentIndex + 1) % items.length) { 
                         item.classList.add('siguiente'); 
@@ -1040,7 +1060,13 @@
                     const video = item.querySelector('video');
                     const container = item.querySelector('.video-vertical-container');
                     if(video) {
-                        if (video.paused) {
+                        // Si está muteado (por fallback), el click le da sonido
+                        if (video.muted) {
+                            video.muted = false;
+                            interactionUnlocked = true;
+                            video.play();
+                            container.classList.remove('is-paused');
+                        } else if (video.paused) {
                             video.play();
                             container.classList.remove('is-paused');
                         } else {
@@ -1052,7 +1078,7 @@
             });
         });
 
-        // --- AUTOPLAY VERTICALES AL HACER SCROLL ---
+        // --- OBSERVER PARA REPRODUCIR AL HACER SCROLL (TIKTOKS) ---
         const verticalesSeccion = document.getElementById('verticales');
         const verticalesObserver = new IntersectionObserver((entradas) => {
             entradas.forEach(entrada => {
@@ -1061,15 +1087,11 @@
                     const video = activeItem.querySelector('video');
                     const container = activeItem.querySelector('.video-vertical-container');
                     if (entrada.isIntersecting) {
-                        if (video) {
-                            video.play().then(() => {
-                                container.classList.remove('is-paused');
-                            }).catch(e => {});
-                        }
+                        if (video) playVideoWithSound(video, container);
                     } else {
                         if (video) {
                             video.pause();
-                            container.classList.add('is-paused');
+                            if(container) container.classList.add('is-paused');
                         }
                     }
                 }
@@ -1084,7 +1106,6 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var playerReel;
-        var interactionUnlocked = false;
 
         function onYouTubeIframeAPIReady() {
             playerReel = new YT.Player('reel-video', {
