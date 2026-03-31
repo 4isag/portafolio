@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aisag | Postproductor Audiovisual</title>
     
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://4isag.github.io/portafolio/">
+    <meta property="og:title" content="Aisag | Postproductor Audiovisual">
+    <meta property="og:description" content="Editor de video enfocado en creadores de contenido. Tú ofreces la idea y yo la hago realidad.">
+    <meta property="og:image" content="https://4isag.github.io/portafolio/imagenes/portafolio-link.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://4isag.github.io/portafolio/">
+    <meta name="twitter:title" content="Aisag | Postproductor Audiovisual">
+    <meta name="twitter:description" content="Editor de video enfocado en creadores de contenido. Tú ofreces la idea y yo la hago realidad.">
+    <meta name="twitter:image" content="https://4isag.github.io/portafolio/imagenes/portafolio-link">
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R0JDEKFF13"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -105,12 +117,13 @@
             overflow: hidden;
         }
 
+        /* FIX DEFINITIVO PARA IOS/SAFARI Y PANTALLAS PEQUEÑAS */
         .hero-section {
-            height: 100vh; 
-            height: 100dvh; 
-            min-height: unset; 
-            padding-top: 0; 
-            padding-bottom: 0;
+            min-height: 100vh; 
+            min-height: -webkit-fill-available; 
+            min-height: 100dvh; 
+            padding: 5vh 5vw; 
+            justify-content: center;
         }
 
         section.seccion-corta {
