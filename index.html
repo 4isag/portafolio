@@ -532,10 +532,11 @@
         /* --- 5. DISEÑO GRÁFICO Y MINIATURAS --- */
         .grid-diseno {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            /* Modificado a 3 columnas para acomodar la nueva imagen arriba */
+            grid-template-columns: repeat(3, 1fr);
             gap: 40px;
             width: 100%;
-            max-width: 900px;
+            max-width: 1100px; /* Un poco más ancho para las 3 columnas */
             margin: 0 auto;
             position: relative;
             z-index: 2;
@@ -552,10 +553,14 @@
             cursor: pointer;
             overflow: hidden;
             display: flex;
+            /* Fuerza a mantener proporción 16:9 en las miniaturas de arriba */
+            aspect-ratio: 16/9; 
         }
 
         .grid-diseno .banner-destacado {
             grid-column: 1 / -1; 
+            /* El banner no tiene proporción fija, se adapta a su contenido */
+            aspect-ratio: auto;
         }
 
         .grid-diseno .item-grafico img {
@@ -781,8 +786,9 @@
             .hero h1 { font-size: 2.8rem; }
             .titulo-seccion { font-size: 2.2rem; margin-bottom: 40px; }
             
-            .grid-trabajos { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
-            .trabajo-item.destacado { grid-column: span 1; }
+            /* En tablets mantenemos 2 columnas para YouTube */
+            .grid-trabajos { grid-template-columns: repeat(2, 1fr); margin: 0 auto; }
+            .trabajo-item.destacado { grid-column: span 2; }
             
             .reel-wrapper, .video-vertical-container { box-shadow: 10px 10px 0px currentColor; }
             
@@ -794,7 +800,8 @@
             .carrusel-btn.prev { left: 0; }
             .carrusel-btn.next { right: 0; }
 
-            .grid-diseno { grid-template-columns: 1fr; max-width: 400px; }
+            /* En tablets, el diseño pasa a 2 columnas */
+            .grid-diseno { grid-template-columns: repeat(2, 1fr); max-width: 700px; }
             .grid-diseno .banner-destacado { grid-column: 1 / -1; } 
 
             .arsenal-floating-box {
@@ -814,6 +821,13 @@
             
             .titulo-seccion { font-size: 1.8rem; margin-bottom: 30px; }
             
+            /* En móvil, YouTube pasa a 1 columna */
+            .grid-trabajos { grid-template-columns: 1fr; max-width: 400px; }
+            .trabajo-item.destacado { grid-column: span 1; }
+
+            /* En móvil, Diseño pasa a 1 columna */
+            .grid-diseno { grid-template-columns: 1fr; max-width: 400px; }
+
             section { padding: 8vh 5vw; }
             section.seccion-corta { padding: 60px 5vw; }
             
@@ -868,7 +882,7 @@
         <h2 class="titulo-seccion animar">Demo Reel</h2>
         <div class="reel-container animar">
             <div class="reel-wrapper">
-                <iframe id="reel-video" src="https://www.youtube.com/embed/gQL5M6Tx1E4?si=F_098p62pdFCpDBE=0&enablejsapi=1&autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <iframe id="reel-video" src="https://www.youtube.com/embed/kyzudk52FX8?si=aNwFsL_uyfB0JFnprel=0&enablejsapi=1&autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -902,6 +916,15 @@
                 </div>
                 <div class="trabajo-info">
                     <p>Motion Graphics | Transiciones | Efectos de sonido | Doblaje | Narrativa</p>
+                </div>
+            </div>
+
+            <div class="trabajo-item animar">
+                <div class="video-container">
+                    <iframe loading="lazy" src="https://www.youtube.com/embed/GK3b7Wr3qAE?si=ImrDyL4SFLWc0Cld" allowfullscreen></iframe>
+                </div>
+                <div class="trabajo-info">
+                    <p>Habilidad 1 | Habilidad 2 | Habilidad 3</p>
                 </div>
             </div>
             
@@ -981,6 +1004,10 @@
 
             <div class="item-grafico animar" onclick="abrirLightbox(this)">
                 <img src="imagenes/poster-veintialgo.jpg" alt="Póster Veintialgo">
+            </div>
+
+            <div class="item-grafico animar" onclick="abrirLightbox(this)">
+                <img src="imagenes/miniatura-2.jpg" alt="Diseño Gráfico">
             </div>
 
             <div class="item-grafico animar banner-destacado" onclick="abrirLightbox(this)">
